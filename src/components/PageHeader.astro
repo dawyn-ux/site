@@ -1,5 +1,6 @@
 ---
 import type { Breadcrumb } from './Seo.astro';
+import Halos from './Halos.astro';
 
 interface Props {
   eyebrow: string;
@@ -12,6 +13,7 @@ const { eyebrow, title, intro, breadcrumbs = [] } = Astro.props;
 
 <section class="page-header">
   <div class="page-header__grid" aria-hidden="true"></div>
+  <Halos class="page-header__halos" />
   <div class="container page-header__inner">
     {
       breadcrumbs.length > 0 && (
@@ -47,6 +49,7 @@ const { eyebrow, title, intro, breadcrumbs = [] } = Astro.props;
 <style>
   .page-header {
     position: relative;
+    background: linear-gradient(180deg, color-mix(in oklab, var(--sky), #fff 30%) 0%, var(--paper) 100%);
     padding-top: calc(var(--header-h) + clamp(2.5rem, 7vw, 5.5rem));
     padding-bottom: clamp(4rem, 8vw, 6.5rem);
     overflow: hidden;
@@ -55,12 +58,18 @@ const { eyebrow, title, intro, breadcrumbs = [] } = Astro.props;
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(to right, color-mix(in oklab, var(--ink), transparent 94%) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in oklab, var(--ink), transparent 94%) 1px, transparent 1px);
+      linear-gradient(to right, color-mix(in oklab, var(--accent-2), transparent 89%) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--accent-2), transparent 89%) 1px, transparent 1px);
     background-size: 56px 56px;
     mask-image: radial-gradient(ellipse 60% 80% at 85% 20%, #000 10%, transparent 70%);
     -webkit-mask-image: radial-gradient(ellipse 60% 80% at 85% 20%, #000 10%, transparent 70%);
     pointer-events: none;
+  }
+  .page-header :global(.page-header__halos) {
+    width: min(70vw, 46rem);
+    right: -10vw;
+    top: -6rem;
+    opacity: 0.8;
   }
   .page-header__inner {
     position: relative;

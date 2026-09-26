@@ -6,25 +6,32 @@
    réglages du CMS (Réglages → Couleurs) dans le <head>.
 ------------------------------------------------------------------- */
 :root {
-  --accent: #c0632f;
-  --ink: #1a1715;
+  /* Couleurs du logo Connect Systèmes */
+  --accent: #d3014e; /* framboise du monogramme « CS » */
+  --accent-2: #4680bf; /* bleu de « SYSTEMES » */
+  --ink: #0b1220; /* noir de « CONNECT » */
+  --sky: #c1dcf2; /* fond bleu ciel du logo */
+  --mist: #e1ecf9; /* halos bleu pâle du logo */
 
-  --paper: #f6f4f0;
-  --paper-2: #eeeae3;
-  --surface: #fbfaf8;
-  --line: #e1dcd4;
-  --line-strong: #cbc4b9;
+  --paper: #f5f8fc;
+  --paper-2: #e8f0f9;
+  --surface: #ffffff;
+  --line: #d7e3f0;
+  --line-strong: #b8cbe1;
   --text: var(--ink);
-  --muted: #6b645c;
+  --muted: #56667b;
 
   --ink-2: color-mix(in oklab, var(--ink), #fff 7%);
-  --ink-line: color-mix(in oklab, var(--ink), #fff 16%);
-  --on-ink: #efebe4;
-  --on-ink-muted: #a8a095;
+  --ink-line: color-mix(in oklab, var(--ink), #fff 17%);
+  --on-ink: #eef3f9;
+  --on-ink-muted: #9db0c8;
 
-  --accent-strong: color-mix(in oklab, var(--accent), #000 24%);
-  --accent-soft: color-mix(in oklab, var(--accent), var(--paper) 86%);
-  --accent-on-ink: color-mix(in oklab, var(--accent), #fff 18%);
+  --accent-strong: color-mix(in oklab, var(--accent), #000 18%);
+  --accent-soft: color-mix(in oklab, var(--accent), #fff 90%);
+  --accent-on-ink: color-mix(in oklab, var(--accent), #fff 28%);
+  --accent-2-strong: color-mix(in oklab, var(--accent-2), #000 22%);
+  --accent-2-soft: color-mix(in oklab, var(--accent-2), #fff 86%);
+  --accent-2-on-ink: color-mix(in oklab, var(--accent-2), #fff 35%);
 
   --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
@@ -35,7 +42,7 @@
   --radius: 1.25rem;
   --radius-lg: 2rem;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --shadow: 0 24px 48px -28px color-mix(in oklab, var(--ink), transparent 72%);
+  --shadow: 0 24px 48px -28px color-mix(in oklab, var(--accent-2), transparent 55%);
   --header-h: 4.75rem;
 
   color-scheme: light;
@@ -156,6 +163,10 @@ textarea {
   background: var(--paper-2);
 }
 
+.section--sky {
+  background: linear-gradient(180deg, var(--sky), color-mix(in oklab, var(--sky), var(--paper) 55%));
+}
+
 .visually-hidden {
   position: absolute !important;
   width: 1px;
@@ -193,7 +204,7 @@ textarea {
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--accent-2-strong);
 }
 .eyebrow::before {
   content: '';
@@ -275,7 +286,7 @@ textarea {
   color: var(--accent);
 }
 .prose a {
-  color: var(--accent-strong);
+  color: var(--accent-2-strong);
 }
 
 /* ------------------------------------------------------------------
@@ -441,6 +452,6 @@ textarea {
   inset: 0;
   z-index: 60;
   pointer-events: none;
-  opacity: 0.035;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }

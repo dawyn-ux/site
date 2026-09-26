@@ -47,6 +47,7 @@ interface Options {
   container: HTMLElement;
   hotspots: Map<PartKey, HTMLElement>;
   accent: string;
+  secondary: string;
   ink: string;
   reducedMotion: boolean;
   onReady?: () => void;
@@ -75,7 +76,7 @@ export function initHarnessScene(opts: Options) {
   const key = new DirectionalLight(0xffffff, 1.6);
   key.position.set(4, 6, 5);
   scene.add(key);
-  const rim = new DirectionalLight(new Color(opts.accent), 1.2);
+  const rim = new DirectionalLight(new Color(opts.secondary), 1.4);
   rim.position.set(-6, 2, -4);
   scene.add(rim);
 
@@ -85,15 +86,18 @@ export function initHarnessScene(opts: Options) {
   // ---------------------------------------------------------------- Matériaux
   const accent = new Color(opts.accent);
   const ink = new Color(opts.ink);
+  const secondary = new Color(opts.secondary);
 
-  const housingMat = new MeshPhysicalMaterial({ color: 0xefeae1, roughness: 0.55, clearcoat: 0.2, clearcoatRoughness: 0.6 });
+  const housingMat = new MeshPhysicalMaterial({ color: 0xf3f5f8, roughness: 0.55, clearcoat: 0.2, clearcoatRoughness: 0.6 });
   const cavityMat = new MeshStandardMaterial({ color: ink.clone().multiplyScalar(0.8), roughness: 0.9 });
   const goldMat = new MeshStandardMaterial({ color: 0xd8b25a, metalness: 1, roughness: 0.22 });
   const tinMat = new MeshStandardMaterial({ color: 0xd3d7d9, metalness: 1, roughness: 0.26 });
-  const copperMat = new MeshStandardMaterial({ color: accent.clone().lerp(new Color(0xe39a62), 0.35), metalness: 1, roughness: 0.28 });
+  // Brins de cuivre étamé
+  const copperMat = new MeshStandardMaterial({ color: 0xc9ced3, metalness: 1, roughness: 0.3 });
   const sleeveMat = new MeshPhysicalMaterial({ color: 0x1d1b1a, roughness: 0.62, clearcoat: 0.35, clearcoatRoughness: 0.5, side: DoubleSide });
 
-  const wireColors = [ink.getHex(), 0x9d3f2c, 0x2f4a63, 0x6c4a34, 0x8b8a86, 0xe9e5dc];
+  // Couleurs d'isolant reprises du logo : noir, framboise, bleu, bleu ciel, gris, blanc
+  const wireColors = [ink.getHex(), accent.getHex(), secondary.getHex(), 0xc1dcf2, 0x8e99a6, 0xf1f4f8];
   const wireMats = wireColors.map(
     (c) => new MeshPhysicalMaterial({ color: c, roughness: 0.42, clearcoat: 0.5, clearcoatRoughness: 0.35 }),
   );
@@ -223,7 +227,7 @@ export function initHarnessScene(opts: Options) {
     root.add(wire);
 
     const pulseMat = new ShaderMaterial({
-      uniforms: { uTime: { value: 0 }, uOffset: { value: i * 0.17 }, uColor: { value: accent.clone().lerp(new Color(0xffd2a8), 0.35) } },
+      uniforms: { uTime: { value: 0 }, uOffset: { value: i * 0.17 }, uColor: { value: accent.clone().lerp(new Color(0xffd6e4), 0.35) } },
       vertexShader: pulseVertex,
       fragmentShader: pulseFragment,
       transparent: true,
@@ -243,7 +247,7 @@ export function initHarnessScene(opts: Options) {
   const mctx = markerCanvas.getContext('2d')!;
   mctx.fillStyle = '#f7f5f0';
   mctx.fillRect(0, 0, 256, 64);
-  mctx.fillStyle = '#1a1715';
+  mctx.fillStyle = '#0b1220';
   mctx.font = '600 40px "Geist Mono Variable", ui-monospace, monospace';
   mctx.textAlign = 'center';
   mctx.textBaseline = 'middle';
@@ -340,8 +344,8 @@ export function initHarnessScene(opts: Options) {
   shadowCanvas.width = shadowCanvas.height = 128;
   const sctx = shadowCanvas.getContext('2d')!;
   const grad = sctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-  grad.addColorStop(0, 'rgba(26,23,21,0.55)');
-  grad.addColorStop(1, 'rgba(26,23,21,0)');
+  grad.addColorStop(0, 'rgba(11,18,32,0.5)');
+  grad.addColorStop(1, 'rgba(11,18,32,0)');
   sctx.fillStyle = grad;
   sctx.fillRect(0, 0, 128, 128);
   const shadow = new Mesh(

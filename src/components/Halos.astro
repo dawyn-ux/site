@@ -1,0 +1,43 @@
+---
+/**
+ * Motif décoratif : les halos du logo, agrandis en arrière-plan.
+ */
+import { LOGO } from './logo/logo-data';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+const paths = LOGO.halos.map((h) => `<path d="${h.d}" stroke-width="${h.w}" stroke-linecap="${h.cap}"/>`).join('');
+---
+
+<svg class:list={['halos', className]} viewBox={LOGO.viewBox.mark} aria-hidden="true" focusable="false">
+  <g class="halos__spin" fill="none">
+    <Fragment set:html={paths} />
+    <g transform={LOGO.rotate} set:html={paths} />
+  </g>
+</svg>
+
+<style>
+  .halos {
+    position: absolute;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .halos__spin {
+    stroke: #fff;
+    transform-origin: 373px 392px;
+    transform-box: view-box;
+    animation: halos-spin 90s linear infinite;
+  }
+  @keyframes halos-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .halos__spin {
+      animation: none;
+    }
+  }
+</style>

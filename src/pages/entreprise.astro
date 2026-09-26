@@ -25,7 +25,7 @@ const years = new Date().getFullYear() - settings.legal.founded;
   <section class="section about">
     <div class="container about__grid">
       <div class="about__card" data-reveal data-tilt>
-        <Logo tone="paper" />
+        <Logo variant="full" class="about__logo" />
         <p class="about__years"><span data-count={String(years)}>{years}</span><small>ans</small></p>
         <p class="about__caption mono">d'expertise en connexion électrique</p>
         <a href={mapsUrl()} target="_blank" rel="noopener" class="about__address">
@@ -92,13 +92,17 @@ const years = new Date().getFullYear() - settings.legal.founded;
     padding: clamp(1.75rem, 4vw, 3rem);
     border-radius: var(--radius-lg);
     background:
-      radial-gradient(120% 100% at 100% 0%, color-mix(in oklab, var(--accent), transparent 70%), transparent 60%),
+      radial-gradient(120% 100% at 100% 0%, color-mix(in oklab, var(--accent-2), transparent 55%), transparent 60%),
       var(--ink);
     color: var(--on-ink);
     transition: transform 0.6s var(--ease);
   }
+  .about__card :global(.about__logo) {
+    width: 8.5rem;
+    border-radius: 1.1rem;
+  }
   .about__years {
-    margin-top: 3rem;
+    margin-top: 2.5rem;
     font-size: clamp(5rem, 3rem + 8vw, 9rem);
     font-weight: 650;
     letter-spacing: -0.07em;

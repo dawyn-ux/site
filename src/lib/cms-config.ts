@@ -524,10 +524,11 @@ export function buildCmsConfig(opts: { repo: string; branch: string; siteUrl: st
                 name: 'theme',
                 widget: 'object',
                 collapsed: true,
-                hint: 'Les couleurs de toute la charte (boutons, logo, 3D) en découlent automatiquement.',
+                hint: 'Reprises du logo. Les teintes de tout le site (boutons, titres, scène 3D) en découlent automatiquement.',
                 fields: [
-                  { label: 'Couleur d’accent', name: 'accent', widget: 'color', allowInput: true },
-                  { label: 'Couleur sombre (textes, fonds)', name: 'ink', widget: 'color', allowInput: true },
+                  { label: 'Couleur principale (framboise du logo)', name: 'accent', widget: 'color', allowInput: true, default: '#D3014E' },
+                  { label: 'Couleur secondaire (bleu du logo)', name: 'secondary', widget: 'color', allowInput: true, default: '#4680BF' },
+                  { label: 'Couleur sombre (textes, fonds)', name: 'ink', widget: 'color', allowInput: true, default: '#0B1220' },
                 ],
               },
               {

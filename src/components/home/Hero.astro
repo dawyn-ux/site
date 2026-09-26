@@ -1,6 +1,7 @@
 ---
 import Icon from '../Icon.astro';
 import GammeArt from '../GammeArt.astro';
+import Halos from '../Halos.astro';
 import { pages, settings, phoneHref } from '../../lib/content';
 
 const { hero, scene_section } = pages.accueil;
@@ -17,6 +18,7 @@ const hotspots = [
 
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero__grid-bg" aria-hidden="true"></div>
+  <Halos class="hero__halos" />
   <div class="container hero__inner">
     <div class="hero__copy">
       <p class="hero__eyebrow eyebrow">{hero.eyebrow}</p>
@@ -109,8 +111,9 @@ const hotspots = [
       canvas,
       container,
       hotspots: hotspots as Map<never, HTMLElement>,
-      accent: css.getPropertyValue('--accent').trim() || '#c0632f',
-      ink: css.getPropertyValue('--ink').trim() || '#1a1715',
+      accent: css.getPropertyValue('--accent').trim() || '#d3014e',
+      secondary: css.getPropertyValue('--accent-2').trim() || '#4680bf',
+      ink: css.getPropertyValue('--ink').trim() || '#0b1220',
       reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
       onReady: () => container.classList.add('is-ready'),
     });
@@ -137,6 +140,9 @@ const hotspots = [
 <style>
   .hero {
     position: relative;
+    background:
+      radial-gradient(90% 70% at 72% 38%, color-mix(in oklab, var(--mist), #fff 30%) 0%, transparent 60%),
+      linear-gradient(180deg, color-mix(in oklab, var(--sky), #fff 25%) 0%, var(--paper) 100%);
     min-height: min(100dvh, 980px);
     padding-top: calc(var(--header-h) + clamp(1.5rem, 4vw, 3rem));
     padding-bottom: clamp(2.5rem, 5vw, 4rem);
@@ -148,12 +154,19 @@ const hotspots = [
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(to right, color-mix(in oklab, var(--ink), transparent 93%) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in oklab, var(--ink), transparent 93%) 1px, transparent 1px);
+      linear-gradient(to right, color-mix(in oklab, var(--accent-2), transparent 88%) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--accent-2), transparent 88%) 1px, transparent 1px);
     background-size: 56px 56px;
     mask-image: radial-gradient(ellipse 70% 60% at 70% 45%, #000 20%, transparent 75%);
     -webkit-mask-image: radial-gradient(ellipse 70% 60% at 70% 45%, #000 20%, transparent 75%);
     pointer-events: none;
+  }
+  .hero :global(.hero__halos) {
+    width: min(78vw, 60rem);
+    right: -14vw;
+    top: 50%;
+    transform: translateY(-46%);
+    opacity: 0.75;
   }
   .hero__inner {
     position: relative;
@@ -370,7 +383,7 @@ const hotspots = [
     font-size: 0.68rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--accent-strong);
+    color: var(--accent-2-strong);
   }
   .hero__caption-text {
     margin-top: 0.35rem;

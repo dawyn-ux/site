@@ -8,7 +8,7 @@ cette version le remplace par un site rapide, sécurisé (HTTPS), optimisé pour
 
 | | |
 |---|---|
-| **Design** | Nouvelle identité (logo « C » + fil serti), palette cuivre / anthracite, typographie Geist, animations au défilement, micro-interactions. |
+| **Identité** | **Logo d'origine redessiné en vectoriel** (monogramme « CS » framboise, halos bleu pâle, lettrages CONNECT / SYSTEMES), couleurs du site reprises du logo : framboise `#D3014E`, bleu `#4680BF`, bleu ciel `#C1DCF2`, bleu pâle `#E1ECF9`, noir. Les halos du logo servent de motif décoratif, et le lettrage CONNECT est repris en grand en pied de page. |
 | **3D interactive** | Faisceau électrique en Three.js sur l'accueil : contacts sertis, boîtier, repère, gaine thermorétractable, tresse ; impulsions de courant animées. On peut le faire pivoter, et chaque repère mène à la gamme correspondante. Chargé à la demande, avec une illustration de secours sans WebGL. |
 | **Administration** | Decap CMS en français sur `/admin` : gammes, documents PDF, actualités, textes des pages, coordonnées, couleurs, SEO. Chaque modification crée un commit GitHub, puis Vercel republie le site en 1 à 2 minutes environ. |
 | **SEO** | Pages statiques très rapides, balises title/description modifiables (avec longueurs contrôlées), URL canoniques, Open Graph, sitemap, robots.txt, données structurées (LocalBusiness, BreadcrumbList, ItemList, Service, NewsArticle), flux RSS, `llms.txt`, **redirections 301 des anciennes pages `.htm`**. |
@@ -91,7 +91,12 @@ informations publiques du site et des annuaires professionnels :
   tresses métalliques, fils émaillés, tôlerie industrielle), secteurs (électroménager, chauffage, automobile, industrie, électronique,
   multimédia), coordonnées, informations légales.
 - **Rédigés pour la proposition, à relire** : textes détaillés des gammes et services, repères historiques, engagements.
-- **Couleurs** : palette cuivre / anthracite, modifiable en un clic dans **Réglages du site → Couleurs** (tout le site, logo et 3D compris, suit la couleur choisie).
+- **Logo** : reproduction vectorielle du logo fourni (`public/logo.svg`, données dans `src/components/logo/logo-data.ts`). Le monogramme a été
+  ajusté sur l'original (97 % de recouvrement pixel) et les lettrages redessinés lettre par lettre. Dans l'en-tête, les mêmes éléments sont
+  disposés à l'horizontale (pastille bleu ciel du monogramme + CONNECT / SYSTEMES), la composition carrée d'origine étant utilisée pour
+  l'image de partage, la page « L'entreprise » et les résultats Google. Si le client dispose du fichier vectoriel original (AI, EPS, SVG, PDF),
+  il suffit de remplacer `public/logo.svg`.
+- **Couleurs** : reprises du logo, ajustables dans **Réglages du site → Couleurs** (couleur principale, secondaire et sombre).
 - **Documents PDF** : 3 catalogues ont été identifiés sur l'ancien site (VERSAFIT RAYCHEM, STO-FIT et cosses en vrac STOCKO).
   Ils s'affichent « sur demande » tant que les fichiers ne sont pas importés. Depuis un poste ayant accès à l'ancien site, lancer :
   ```bash

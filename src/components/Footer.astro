@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Logo from './Logo.astro';
+import { LOGO } from './logo/logo-data';
 import Icon from './Icon.astro';
 import { settings, phoneHref, mapsUrl } from '../lib/content';
 
@@ -13,7 +14,7 @@ const socials = (['linkedin', 'facebook', 'youtube'] as const).filter((k) => set
   <div class="container">
     <div class="site-footer__top">
       <div class="site-footer__brand">
-        <Logo tone="paper" />
+        <Logo tone="dark" />
         <p class="site-footer__tagline">{settings.tagline}.</p>
         <p class="site-footer__since mono">Depuis {settings.legal.founded} — {settings.contact.city}</p>
       </div>
@@ -71,7 +72,9 @@ const socials = (['linkedin', 'facebook', 'youtube'] as const).filter((k) => set
       </div>
     </div>
 
-    <p class="site-footer__giant" aria-hidden="true">Connect Systèmes</p>
+    <svg class="site-footer__giant" viewBox={LOGO.viewBox.connect} aria-hidden="true" focusable="false">
+      <Fragment set:html={LOGO.connect.map((l) => `<path fill-rule="${l.rule}" d="${l.d}"/>`).join('')} />
+    </svg>
 
     <div class="site-footer__bottom">
       <p>© {year} {settings.legal_name}. Tous droits réservés.</p>
@@ -134,7 +137,7 @@ const socials = (['linkedin', 'facebook', 'youtube'] as const).filter((k) => set
     font-weight: 500;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--accent-on-ink);
+    color: var(--accent-2-on-ink);
   }
   .site-footer ul {
     list-style: none;
@@ -156,15 +159,14 @@ const socials = (['linkedin', 'facebook', 'youtube'] as const).filter((k) => set
     color: var(--on-ink-muted);
   }
   .site-footer__giant {
+    display: block;
+    width: 100%;
+    height: auto;
     margin: clamp(3rem, 7vw, 5rem) 0 1.5rem;
-    font-size: clamp(3rem, 12.2vw, 11.5rem);
-    font-weight: 650;
-    letter-spacing: -0.06em;
-    line-height: 0.8;
-    white-space: nowrap;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--ink-line);
-    user-select: none;
+    fill: none;
+    stroke: var(--ink-line);
+    stroke-width: 0.6;
+    overflow: visible;
   }
   .site-footer__bottom {
     display: flex;

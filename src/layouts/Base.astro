@@ -12,7 +12,7 @@ interface Props extends SeoProps {
 }
 
 const { headerOverlay = false, bodyClass, ...seo } = Astro.props;
-const themeCss = `:root{--accent:${settings.theme.accent};--ink:${settings.theme.ink};}`;
+const themeCss = `:root{--accent:${settings.theme.accent};--accent-2:${settings.theme.secondary};--ink:${settings.theme.ink};}`;
 ---
 
 <!doctype html>

@@ -1,105 +1,139 @@
 ---
 /**
- * Logo Connect Systèmes (nouvelle identité).
- * Le « C » figure un logement de contact ; le fil cuivre, serti dans son fût,
- * vient s'y connecter. Les couleurs suivent les variables du thème.
+ * Logo Connect Systèmes : reproduction vectorielle du logo d'origine
+ * (monogramme « CS » framboise, halos bleu pâle, CONNECT noir, SYSTEMES bleu).
+ *
+ * - variant="lockup" (défaut) : pastille du monogramme + mots-marques empilés (en-tête)
+ * - variant="full"            : composition carrée d'origine
+ * - variant="mark"            : pastille seule
  */
+import { LOGO } from './logo/logo-data';
+
 interface Props {
-  tone?: 'ink' | 'paper';
-  showText?: boolean;
+  variant?: 'lockup' | 'full' | 'mark';
+  tone?: 'light' | 'dark';
   class?: string;
+  title?: string;
 }
-const { tone = 'ink', showText = true, class: className } = Astro.props;
+const { variant = 'lockup', tone = 'light', class: className, title = 'Connect Systèmes' } = Astro.props;
+
+const halos = LOGO.halos;
+const markInner = `
+  <g class="lg-halos" fill="none">
+    ${halos.map((h) => `<path d="${h.d}" stroke-width="${h.w}" stroke-linecap="${h.cap}"/>`).join('')}
+    <g transform="${LOGO.rotate}">${halos.map((h) => `<path d="${h.d}" stroke-width="${h.w}" stroke-linecap="${h.cap}"/>`).join('')}</g>
+  </g>
+  <g class="lg-groove" fill="none" stroke-width="${LOGO.groove.width}">
+    <path d="${LOGO.groove.d}"/><path d="${LOGO.groove.d}" transform="${LOGO.rotate}"/>
+  </g>
+  <g class="lg-cs">
+    ${LOGO.cs.map((d) => `<path d="${d}"/>`).join('')}
+    <g transform="${LOGO.rotate}">${LOGO.cs.map((d) => `<path d="${d}"/>`).join('')}</g>
+  </g>`;
+const connect = LOGO.connect.map((l) => `<path fill-rule="${l.rule}" d="${l.d}"/>`).join('');
+const systemes = `<path transform="${LOGO.systemes.transform}" d="${LOGO.systemes.d}"/>`;
 ---
 
-<span class:list={['logo', `logo--${tone}`, className]}>
-  <svg class="logo__mark" viewBox="0 0 58 48" aria-hidden="true" focusable="false">
-    <path
-      class="logo__c"
-      d="M33.8 33.2 A15 15 0 1 1 33.8 14.8"
-      fill="none"
-      stroke-width="6.5"
-      stroke-linecap="round"></path>
-    <line class="logo__wire" x1="24" y1="24" x2="58" y2="24" stroke-width="3.4" stroke-linecap="round"></line>
-    <line class="logo__pulse" x1="24" y1="24" x2="58" y2="24" stroke-width="3.4" stroke-linecap="round"></line>
-    <rect class="logo__barrel" x="37.5" y="19" width="10" height="10" rx="2"></rect>
-    <circle class="logo__dot" cx="22" cy="24" r="4.4"></circle>
-  </svg>
-  {
-    showText && (
-      <span class="logo__text">
-        <span class="logo__name">Connect</span>
-        <span class="logo__sub">Systèmes</span>
-      </span>
-    )
-  }
-</span>
+{
+  variant === 'full' && (
+    <svg
+      class:list={['lg', 'lg--full', `lg--${tone}`, className]}
+      viewBox={LOGO.viewBox.full}
+      role="img"
+      aria-label={title}
+    >
+      <rect class="lg-bg" width="756" height="770" rx="36" />
+      <Fragment set:html={markInner} />
+      <g class="lg-connect" set:html={connect} />
+      <g class="lg-systemes" set:html={systemes} />
+    </svg>
+  )
+}
+{
+  variant !== 'full' && (
+    <span class:list={['lg', `lg--${variant}`, `lg--${tone}`, className]} role="img" aria-label={title}>
+      <svg class="lg-badge" viewBox={LOGO.viewBox.mark} aria-hidden="true" focusable="false">
+        <rect class="lg-bg" x="48" y="67" width="650" height="650" rx="150" />
+        <Fragment set:html={markInner} />
+      </svg>
+      {variant === 'lockup' && (
+        <span class="lg-words" aria-hidden="true">
+          <svg class="lg-connect" viewBox={LOGO.viewBox.connect} set:html={connect} />
+          <svg class="lg-systemes" viewBox={LOGO.viewBox.systemes} set:html={systemes} />
+        </span>
+      )}
+    </span>
+  )
+}
 
 <style>
-  .logo {
+  .lg {
+    --lg-red: #d3014e;
+    --lg-blue: #4680bf;
+    --lg-sky: #c1dcf2;
+    --lg-mist: #e1ecf9;
+    --lg-black: #0a0b0f;
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    color: var(--text);
-    line-height: 1;
+    gap: 0.7rem;
+    line-height: 0;
   }
-  .logo--paper {
-    color: var(--on-ink);
+  .lg--dark {
+    --lg-black: #f2f6fb;
+    --lg-blue: #8db6e6;
   }
-  .logo__mark {
-    width: 2.6rem;
-    height: auto;
+  .lg :global(.lg-bg) {
+    fill: var(--lg-sky);
+  }
+  .lg :global(.lg-halos) {
+    stroke: var(--lg-mist);
+    transform-origin: 373px 392px;
+    transform-box: view-box;
+    transition: transform 1.2s var(--ease, ease);
+  }
+  .lg :global(.lg-groove) {
+    stroke: var(--lg-mist);
+  }
+  .lg :global(.lg-cs) {
+    fill: var(--lg-red);
+  }
+  .lg-connect,
+  .lg :global(.lg-connect) {
+    fill: var(--lg-black);
+  }
+  .lg-systemes,
+  .lg :global(.lg-systemes) {
+    fill: var(--lg-blue);
+  }
+  .lg-badge {
+    width: 3.1rem;
+    height: 3.1rem;
     flex: none;
     overflow: visible;
   }
-  .logo__c {
-    stroke: currentColor;
-  }
-  .logo__barrel {
-    fill: currentColor;
-  }
-  .logo__wire,
-  .logo__dot {
-    stroke: var(--accent);
-    fill: var(--accent);
-  }
-  .logo__pulse {
-    stroke: color-mix(in oklab, var(--accent), white 65%);
-    stroke-dasharray: 5 60;
-    stroke-dashoffset: 65;
-    opacity: 0;
-  }
-  :global(a:hover) > .logo .logo__pulse,
-  .logo:hover .logo__pulse {
-    opacity: 1;
-    animation: logo-pulse 0.9s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-  }
-  @keyframes logo-pulse {
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-  .logo__text {
+  .lg-words {
     display: grid;
-    gap: 0.28rem;
+    gap: 0.32rem;
   }
-  .logo__name {
-    font-weight: 650;
-    font-size: 1.12rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  .lg-words svg {
+    height: 1.02rem;
+    width: auto;
+    overflow: visible;
   }
-  .logo__sub {
-    font-family: var(--font-mono);
-    font-size: 0.64rem;
-    letter-spacing: 0.42em;
-    text-transform: uppercase;
-    opacity: 0.72;
+  .lg-words .lg-systemes {
+    margin-left: -0.1rem;
+  }
+  .lg--full {
+    width: 100%;
+    height: auto;
+  }
+  :global(a:hover) > .lg :global(.lg-halos),
+  .lg:hover :global(.lg-halos) {
+    transform: rotate(-10deg);
   }
   @media (prefers-reduced-motion: reduce) {
-    .logo:hover .logo__pulse {
-      animation: none;
-      opacity: 0;
+    .lg :global(.lg-halos) {
+      transition: none;
     }
   }
 </style>

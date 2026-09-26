@@ -89,9 +89,9 @@ const quoteUrl = `/contact/?sujet=${encodeURIComponent('Demande de devis')}&gamm
       <div class="detail__main">
         {
           data.features.length > 0 && (
-            <ul class="features">
+            <ul class="features" data-reveal>
               {data.features.map((f, i) => (
-                <li class="feature" data-reveal style={`--i:${i % 2}`}>
+                <li class="feature">
                   <span class="feature__num mono">{String(i + 1).padStart(2, '0')}</span>
                   <h2 class="feature__title">{f.title}</h2>
                   <p>{f.text}</p>

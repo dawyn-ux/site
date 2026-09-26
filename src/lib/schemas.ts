@@ -83,6 +83,11 @@ export const settingsSchema = z.object({
     .transform((v) => v ?? []),
   theme: z.object({
     accent: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+    secondary: z
+      .string()
+      .regex(/^#[0-9a-fA-F]{6}$/)
+      .nullish()
+      .transform((v) => v ?? '#4680BF'),
     ink: z.string().regex(/^#[0-9a-fA-F]{6}$/),
   }),
   social: z

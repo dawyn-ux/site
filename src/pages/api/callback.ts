@@ -9,7 +9,7 @@ function respond(origin: string, status: 'success' | 'error', content: Record<st
   const safe = (v: string) => JSON.stringify(v).replace(/</g, '\\u003c');
   const html = `<!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Connexion…</title></head>
-<body style="font-family:system-ui,sans-serif;padding:2rem;color:#1a1715;background:#f6f4f0">
+<body style="font-family:system-ui,sans-serif;padding:2rem;color:#0b1220;background:#f5f8fc">
 <p>${status === 'success' ? 'Connexion réussie, vous pouvez fermer cette fenêtre.' : 'La connexion a échoué. Fermez cette fenêtre et réessayez.'}</p>
 <script>
 (function () {

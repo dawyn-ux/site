@@ -1,7 +1,7 @@
 ---
 /**
  * Illustrations vectorielles des gammes (légères, nettes à toutes les tailles).
- * Couleurs pilotées par les variables du thème : --accent (cuivre) et --ink.
+ * Couleurs pilotées par les variables du thème (couleurs du logo) : --accent, --accent-2 et --ink.
  */
 interface Props {
   name: string;
@@ -210,9 +210,9 @@ const uid = `art-${name}-${Math.random().toString(36).slice(2, 8)}`;
     height: auto;
     overflow: visible;
     color: var(--ink);
-    --art-front: color-mix(in oklab, var(--surface), var(--paper-2) 30%);
+    --art-front: color-mix(in oklab, var(--surface), var(--mist) 40%);
     --art-top: #ffffff;
-    --art-side: color-mix(in oklab, var(--paper-2), var(--line-strong) 45%);
+    --art-side: color-mix(in oklab, var(--sky), var(--line-strong) 30%);
   }
   .f-front {
     fill: var(--art-front);
@@ -241,7 +241,7 @@ const uid = `art-${name}-${Math.random().toString(36).slice(2, 8)}`;
     fill: var(--ink);
   }
   .pin {
-    fill: color-mix(in oklab, var(--accent), #fff 35%);
+    fill: #cfd6dc;
   }
   .w-shadow {
     stroke: color-mix(in oklab, var(--ink), transparent 88%);
@@ -253,7 +253,7 @@ const uid = `art-${name}-${Math.random().toString(36).slice(2, 8)}`;
     stroke: var(--accent);
   }
   .w-mid {
-    stroke: color-mix(in oklab, var(--ink), var(--paper) 45%);
+    stroke: var(--accent-2);
   }
   .w-light {
     stroke: color-mix(in oklab, var(--line-strong), var(--paper) 10%);
@@ -262,7 +262,7 @@ const uid = `art-${name}-${Math.random().toString(36).slice(2, 8)}`;
     stroke: rgba(255, 255, 255, 0.25);
   }
   .strands {
-    stroke: var(--accent);
+    stroke: #9aa6b1;
     stroke-width: 2;
   }
   .metal {
@@ -280,11 +280,11 @@ const uid = `art-${name}-${Math.random().toString(36).slice(2, 8)}`;
   }
   .dim {
     fill: none;
-    stroke: var(--accent);
+    stroke: var(--accent-2);
     stroke-width: 1.25;
   }
   .sleeve {
-    fill: color-mix(in oklab, var(--accent), var(--ink) 55%);
+    fill: color-mix(in oklab, var(--accent), var(--ink) 12%);
     stroke: var(--ink);
     stroke-width: 1.5;
   }
@@ -295,7 +295,7 @@ const uid = `art-${name}-${Math.random().toString(36).slice(2, 8)}`;
     stroke-linecap: round;
   }
   .heat path {
-    stroke: var(--accent);
+    stroke: var(--accent-2);
     stroke-width: 2.5;
     opacity: 0.85;
   }
@@ -324,7 +324,7 @@ const uid = `art-${name}-${Math.random().toString(36).slice(2, 8)}`;
     fill: var(--accent);
   }
   .core-mid {
-    fill: var(--line-strong);
+    fill: var(--accent-2);
   }
   .flange,
   .flange-back {

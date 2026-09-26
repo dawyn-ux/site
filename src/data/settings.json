@@ -37,8 +37,9 @@
     }
   ],
   "theme": {
-    "accent": "#C0632F",
-    "ink": "#1A1715"
+    "accent": "#D3014E",
+    "secondary": "#4680BF",
+    "ink": "#0B1220"
   },
   "social": {
     "linkedin": "",
