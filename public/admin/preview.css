@@ -1,0 +1,14 @@
+/* Aperçu dans l'éditeur : typographie proche du site */
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: #1a1715;
+  background: #f6f4f0;
+  line-height: 1.6;
+  padding: 2rem;
+  max-width: 68ch;
+}
+h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.1; }
+h1 { font-size: 2.6rem; }
+a { color: #9a4c22; }
+li::marker { color: #c0632f; }
+img { max-width: 100%; border-radius: 12px; }

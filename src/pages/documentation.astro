@@ -1,0 +1,120 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import DocumentList from '../components/DocumentList.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { pages } from '../lib/content';
+
+const page = pages.documentation;
+const documents = (await getCollection('documents')).sort((a, b) => a.data.order - b.data.order);
+const brands = [...new Set(documents.map((d) => d.data.brand).filter(Boolean))] as string[];
+const breadcrumbs = [{ name: 'Documentation', url: '/documentation/' }];
+---
+
+<Base
+  title={page.title}
+  seoTitle={page.seo.title}
+  description={page.seo.description}
+  image={page.seo.image}
+  noindex={page.seo.noindex}
+  breadcrumbs={breadcrumbs}
+  headerOverlay
+>
+  <PageHeader eyebrow={page.eyebrow} title={page.title} intro={page.intro} breadcrumbs={breadcrumbs} />
+
+  <section class="section docs-page">
+    <div class="container docs-page__inner">
+      {
+        brands.length > 1 && (
+          <div class="filters" role="group" aria-label="Filtrer par marque" data-filters>
+            <button type="button" class="filter is-active" data-filter="">
+              Tout <span class="mono">{documents.length}</span>
+            </button>
+            {brands.map((b) => (
+              <button type="button" class="filter" data-filter={b}>
+                {b} <span class="mono">{documents.filter((d) => d.data.brand === b).length}</span>
+              </button>
+            ))}
+          </div>
+        )
+      }
+      <div data-doclist>
+        <DocumentList documents={documents} />
+      </div>
+      <p class="docs-page__note">
+        Les documents techniques restent la propriété de leurs fabricants. Seules les dernières versions publiées par
+        ceux-ci font foi.
+      </p>
+    </div>
+  </section>
+
+  <CtaBand title="Un document introuvable ?" text="Nous vous transmettons les fiches techniques, catalogues et certificats de nos fabricants partenaires." button={{ label: 'Demander un document', url: '/contact/?sujet=Demande%20de%20documentation' }} />
+</Base>
+
+<script>
+  const filters = document.querySelector<HTMLElement>('[data-filters]');
+  if (filters) {
+    filters.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
+      if (!btn) return;
+      const value = btn.dataset.filter ?? '';
+      filters.querySelectorAll('[data-filter]').forEach((b) => b.classList.toggle('is-active', b === btn));
+      document.querySelectorAll<HTMLElement>('[data-doclist] [data-brand]').forEach((el) => {
+        el.hidden = value !== '' && el.dataset.brand !== value;
+      });
+    });
+  }
+</script>
+
+<style>
+  .docs-page {
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
+  .docs-page__inner {
+    display: grid;
+    gap: 2rem;
+    max-width: 62rem;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.5rem;
+    padding: 0 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background-color 0.3s var(--ease),
+      color 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+  .filter .mono {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .filter:hover {
+    border-color: var(--ink);
+  }
+  .filter.is-active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--on-ink);
+  }
+  .filter.is-active .mono {
+    color: var(--on-ink-muted);
+  }
+  .docs-page__note {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+</style>

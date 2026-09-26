@@ -1,0 +1,49 @@
+---
+import { typoHtml } from '../lib/schemas';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { formatDate } from '../lib/content';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('legal');
+  return entries.map((entry) => ({ params: { legal: entry.id }, props: { entry } }));
+}
+
+interface Props {
+  entry: CollectionEntry<'legal'>;
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const html = entry.rendered?.html ? typoHtml(entry.rendered.html) : null;
+const breadcrumbs = [{ name: entry.data.title, url: `/${entry.id}/` }];
+---
+
+<Base
+  title={entry.data.title}
+  seoTitle={entry.data.seo.title}
+  description={entry.data.seo.description}
+  noindex={entry.data.seo.noindex}
+  breadcrumbs={breadcrumbs}
+  headerOverlay
+>
+  <PageHeader
+    eyebrow="Informations"
+    title={entry.data.title}
+    intro={entry.data.updated ? `Mise à jour le ${formatDate(entry.data.updated)}` : undefined}
+    breadcrumbs={breadcrumbs}
+  />
+  <section class="section legal">
+    <div class="container">
+      <div class="prose">
+        {html ? <Fragment set:html={html} /> : <Content />}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legal {
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
+</style>

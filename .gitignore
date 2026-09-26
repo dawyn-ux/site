@@ -1,0 +1,22 @@
+# build output
+dist/
+.vercel/
+.astro/
+
+# dependencies
+node_modules/
+
+# Decap CMS (copié depuis node_modules au build)
+public/admin/vendor/
+
+# logs & env
+npm-debug.log*
+.env
+.env.*
+!.env.example
+
+# OS / éditeurs
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json

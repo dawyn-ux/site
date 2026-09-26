@@ -1,0 +1,205 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { pages, settings } from '../lib/content';
+
+const page = pages.services;
+const breadcrumbs = [{ name: 'Services', url: '/services/' }];
+
+const servicesLd = page.services.map((s) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: s.title,
+  description: s.text,
+  provider: { '@id': new URL('/#organisation', Astro.site).href },
+  areaServed: 'FR',
+}));
+---
+
+<Base
+  title={page.title}
+  seoTitle={page.seo.title}
+  description={page.seo.description}
+  image={page.seo.image}
+  noindex={page.seo.noindex}
+  breadcrumbs={breadcrumbs}
+  jsonLd={servicesLd}
+  headerOverlay
+>
+  <PageHeader eyebrow={page.eyebrow} title={page.title} intro={page.intro} breadcrumbs={breadcrumbs} />
+
+  <section class="section services">
+    <div class="container">
+      <ol class="services__list">
+        {
+          page.services.map((s, i) => (
+            <li class="service" data-reveal>
+              <div class="service__head">
+                <span class="service__num mono">{String(i + 1).padStart(2, '0')}</span>
+                <span class="service__icon">
+                  <Icon name={s.icon} size={30} />
+                </span>
+              </div>
+              <div class="service__body">
+                <h2 class="h2 service__title">{s.title}</h2>
+                <p class="lead">{s.text}</p>
+              </div>
+              {s.points.length > 0 && (
+                <ul class="service__points">
+                  {s.points.map((p) => (
+                    <li>
+                      <Icon name="check" size={18} />
+                      <span>{p}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--ink process">
+    <div class="container">
+      <p class="eyebrow" data-reveal>Méthode</p>
+      <h2 class="h2 process__title" data-reveal style="--i:1">{page.process.title}</h2>
+      <ol class="process__steps">
+        {
+          page.process.steps.map((step, i) => (
+            <li class="step" data-reveal style={`--i:${i}`}>
+              <span class="step__num mono">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="step__title">{step.title}</h3>
+              <p>{step.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <CtaBand title="Besoin d'une analyse de sertissage ?" text={`Contactez notre équipe à ${settings.contact.city} : nous étudions votre besoin et vous proposons une solution adaptée.`} />
+</Base>
+
+<style>
+  .services {
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
+  .services__list {
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+  .service {
+    display: grid;
+    gap: 1.5rem;
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+    border-bottom: 1px solid var(--line);
+  }
+  .service__head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .service__num {
+    font-size: 0.75rem;
+    color: var(--accent-strong);
+  }
+  .service__icon {
+    display: grid;
+    place-items: center;
+    width: 3.75rem;
+    height: 3.75rem;
+    border-radius: 1.1rem;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    transition: transform 0.6s var(--ease);
+  }
+  .service:hover .service__icon {
+    transform: rotate(-8deg) scale(1.05);
+  }
+  .service__title {
+    font-size: clamp(1.6rem, 1.1rem + 1.6vw, 2.4rem);
+    max-width: 20ch;
+  }
+  .service__body .lead {
+    margin-top: 1rem;
+  }
+  .service__points {
+    list-style: none;
+    display: grid;
+    gap: 0.8rem;
+    align-content: start;
+  }
+  .service__points li {
+    display: flex;
+    gap: 0.7rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px dashed var(--line-strong);
+  }
+  .service__points :global(.icon) {
+    color: var(--accent);
+    flex: none;
+    margin-top: 0.2rem;
+  }
+  @media (min-width: 1024px) {
+    .service {
+      grid-template-columns: 8rem 1.4fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    .service__head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  .process__title {
+    margin-top: 1rem;
+    max-width: 18ch;
+  }
+  .process__steps {
+    list-style: none;
+    display: grid;
+    gap: 1rem;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    counter-reset: step;
+  }
+  .step {
+    position: relative;
+    padding: 1.75rem 1.5rem 2rem;
+    border-top: 2px solid var(--ink-line);
+    transition: border-color 0.4s var(--ease);
+  }
+  .step:hover {
+    border-color: var(--accent);
+  }
+  .step__num {
+    font-size: 0.75rem;
+    color: var(--accent-on-ink);
+  }
+  .step__title {
+    margin-top: 1rem;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+  }
+  .step p {
+    margin-top: 0.5rem;
+    color: var(--on-ink-muted);
+  }
+  @media (min-width: 700px) {
+    .process__steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1100px) {
+    .process__steps {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .step:nth-child(even) {
+      margin-top: 2.5rem;
+    }
+  }
+</style>

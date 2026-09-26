@@ -1,0 +1,199 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import GammeArt from '../../components/GammeArt.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+import { pages } from '../../lib/content';
+
+const page = pages.gammes;
+const gammes = (await getCollection('gammes')).sort((a, b) => a.data.order - b.data.order);
+const breadcrumbs = [{ name: 'Gammes', url: '/gammes/' }];
+
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: gammes.map((g, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: g.data.title,
+    url: new URL(`/gammes/${g.id}/`, Astro.site).href,
+  })),
+};
+---
+
+<Base
+  title={page.title}
+  seoTitle={page.seo.title}
+  description={page.seo.description}
+  image={page.seo.image}
+  noindex={page.seo.noindex}
+  breadcrumbs={breadcrumbs}
+  jsonLd={[itemList]}
+  headerOverlay
+>
+  <PageHeader eyebrow={page.eyebrow} title={page.title} intro={page.intro} breadcrumbs={breadcrumbs}>
+    <nav class="jump" aria-label="Accès rapide aux gammes">
+      {
+        gammes.map((g, i) => (
+          <a href={`#${g.id}`} class="chip">
+            <span class="mono">{String(i + 1).padStart(2, '0')}</span> {g.data.short_title ?? g.data.title}
+          </a>
+        ))
+      }
+    </nav>
+  </PageHeader>
+
+  <section class="section ranges">
+    <div class="container">
+      {
+        gammes.map((g, i) => (
+          <article class="range" id={g.id}>
+            <div class="range__art" data-reveal data-tilt>
+              {g.data.image ? (
+                <img src={g.data.image} alt={g.data.image_alt ?? ''} loading="lazy" decoding="async" width="800" height="600" />
+              ) : (
+                <GammeArt name={g.data.illustration} />
+              )}
+            </div>
+            <div class="range__body" data-reveal style="--i:1">
+              <p class="range__num mono">
+                {String(i + 1).padStart(2, '0')} / {String(gammes.length).padStart(2, '0')}
+              </p>
+              <h2 class="h2 range__title">
+                <a href={`/gammes/${g.id}/`}>{g.data.title}</a>
+              </h2>
+              <p class="lead">{g.data.summary}</p>
+              {g.data.brands.length > 0 && (
+                <ul class="range__chips" aria-label="Marques">
+                  {g.data.brands.map((b) => (
+                    <li class="chip mono">{b}</li>
+                  ))}
+                </ul>
+              )}
+              <ul class="range__features">
+                {g.data.features.slice(0, 3).map((f) => (
+                  <li>
+                    <Icon name="check" size={18} />
+                    {f.title}
+                  </li>
+                ))}
+              </ul>
+              <a href={`/gammes/${g.id}/`} class="btn btn--ghost">
+                Découvrir la gamme <Icon name="arrow-right" size={18} />
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 2.5rem;
+    max-width: 60rem;
+  }
+  .jump a {
+    text-decoration: none;
+    transition:
+      border-color 0.3s var(--ease),
+      color 0.3s var(--ease);
+  }
+  .jump a:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+  .jump .mono {
+    color: var(--accent-strong);
+    font-size: 0.72rem;
+  }
+  .ranges {
+    padding-top: clamp(2rem, 4vw, 3rem);
+  }
+  .range {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+    padding-block: clamp(2.5rem, 6vw, 5rem);
+    border-top: 1px solid var(--line);
+    scroll-margin-top: calc(var(--header-h) + 1rem);
+  }
+  .range__art {
+    display: grid;
+    place-items: center;
+    padding: clamp(1.5rem, 4vw, 3.5rem);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(90% 80% at 30% 20%, var(--surface), transparent 70%),
+      var(--paper-2);
+    border: 1px solid var(--line);
+    transition: transform 0.6s var(--ease);
+    will-change: transform;
+  }
+  .range__art :global(svg) {
+    max-width: 30rem;
+  }
+  .range__art img {
+    border-radius: 1rem;
+    width: 100%;
+    object-fit: cover;
+    aspect-ratio: 4 / 3;
+  }
+  .range__body {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .range__num {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--accent-strong);
+  }
+  .range__title {
+    font-size: clamp(1.8rem, 1.2rem + 2vw, 2.8rem);
+  }
+  .range__title a {
+    text-decoration: none;
+  }
+  .range__title a:hover {
+    color: var(--accent-strong);
+  }
+  .range__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+  }
+  .range__features {
+    list-style: none;
+    display: grid;
+    gap: 0.55rem;
+  }
+  .range__features li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 500;
+  }
+  .range__features :global(.icon) {
+    color: var(--accent);
+    flex: none;
+  }
+  @media (min-width: 960px) {
+    .range {
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(3rem, 6vw, 6rem);
+    }
+    .range:nth-child(even) .range__art {
+      order: 2;
+    }
+  }
+</style>

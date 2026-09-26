@@ -1,0 +1,89 @@
+---
+import { typoHtml } from '../../lib/schemas';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+import { settings, formatDate } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('actualites', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+interface Props {
+  post: CollectionEntry<'actualites'>;
+}
+const { post } = Astro.props;
+const { data } = post;
+const { Content } = await render(post);
+const html = post.rendered?.html ? typoHtml(post.rendered.html) : null;
+const breadcrumbs = [
+  { name: 'Actualités', url: '/actualites/' },
+  { name: data.title, url: `/actualites/${post.id}/` },
+];
+
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: data.title,
+  description: data.summary,
+  datePublished: data.date.toISOString(),
+  image: [new URL(data.image || settings.seo.default_image, Astro.site).href],
+  author: { '@type': 'Organization', name: settings.legal_name, url: new URL('/', Astro.site).href },
+  publisher: { '@id': new URL('/#organisation', Astro.site).href },
+  mainEntityOfPage: new URL(`/actualites/${post.id}/`, Astro.site).href,
+  inLanguage: 'fr-FR',
+};
+---
+
+<Base
+  title={data.title}
+  seoTitle={data.seo.title}
+  description={data.seo.description ?? data.summary}
+  image={data.seo.image ?? data.image}
+  noindex={data.seo.noindex}
+  type="article"
+  publishedTime={data.date}
+  breadcrumbs={breadcrumbs}
+  jsonLd={[articleLd]}
+  headerOverlay
+>
+  <PageHeader eyebrow={formatDate(data.date)} title={data.title} intro={data.summary} breadcrumbs={breadcrumbs} />
+
+  <article class="section article">
+    <div class="container article__inner">
+      {data.image && <img class="article__cover" src={data.image} alt={data.image_alt ?? ''} width="1200" height="675" />}
+      <div class="prose article__prose">
+        {html ? <Fragment set:html={html} /> : <Content />}
+      </div>
+      <a href="/actualites/" class="link-arrow article__back"><Icon name="arrow-left" size={16} /> Toutes les actualités</a>
+    </div>
+  </article>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .article {
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
+  .article__inner {
+    display: grid;
+    gap: 2.5rem;
+    max-width: 52rem;
+  }
+  .article__cover {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .article__prose {
+    font-size: 1.12rem;
+  }
+  .article__back {
+    justify-self: start;
+  }
+</style>

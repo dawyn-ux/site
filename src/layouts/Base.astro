@@ -1,0 +1,48 @@
+---
+import '../styles/global.css';
+import geistLatin from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
+import Seo, { type SeoProps } from '../components/Seo.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { settings } from '../lib/content';
+
+interface Props extends SeoProps {
+  headerOverlay?: boolean;
+  bodyClass?: string;
+}
+
+const { headerOverlay = false, bodyClass, ...seo } = Astro.props;
+const themeCss = `:root{--accent:${settings.theme.accent};--ink:${settings.theme.ink};}`;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <Seo {...seo} />
+    <link rel="preload" href={geistLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${settings.site_name} — Actualités`} href="/actualites/rss.xml" />
+    <meta name="theme-color" content={settings.theme.ink} />
+    <meta name="format-detection" content="telephone=no" />
+    <style set:html={themeCss}></style>
+    <slot name="head" />
+  </head>
+  <body class={bodyClass}>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+    <Header overlay={headerOverlay} />
+    <main id="contenu">
+      <slot />
+    </main>
+    <Footer />
+    <div class="grain" aria-hidden="true"></div>
+    <script>
+      import '../scripts/ui';
+    </script>
+  </body>
+</html>

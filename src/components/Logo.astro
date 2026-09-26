@@ -1,0 +1,105 @@
+---
+/**
+ * Logo Connect Systèmes (nouvelle identité).
+ * Le « C » figure un logement de contact ; le fil cuivre, serti dans son fût,
+ * vient s'y connecter. Les couleurs suivent les variables du thème.
+ */
+interface Props {
+  tone?: 'ink' | 'paper';
+  showText?: boolean;
+  class?: string;
+}
+const { tone = 'ink', showText = true, class: className } = Astro.props;
+---
+
+<span class:list={['logo', `logo--${tone}`, className]}>
+  <svg class="logo__mark" viewBox="0 0 58 48" aria-hidden="true" focusable="false">
+    <path
+      class="logo__c"
+      d="M33.8 33.2 A15 15 0 1 1 33.8 14.8"
+      fill="none"
+      stroke-width="6.5"
+      stroke-linecap="round"></path>
+    <line class="logo__wire" x1="24" y1="24" x2="58" y2="24" stroke-width="3.4" stroke-linecap="round"></line>
+    <line class="logo__pulse" x1="24" y1="24" x2="58" y2="24" stroke-width="3.4" stroke-linecap="round"></line>
+    <rect class="logo__barrel" x="37.5" y="19" width="10" height="10" rx="2"></rect>
+    <circle class="logo__dot" cx="22" cy="24" r="4.4"></circle>
+  </svg>
+  {
+    showText && (
+      <span class="logo__text">
+        <span class="logo__name">Connect</span>
+        <span class="logo__sub">Systèmes</span>
+      </span>
+    )
+  }
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text);
+    line-height: 1;
+  }
+  .logo--paper {
+    color: var(--on-ink);
+  }
+  .logo__mark {
+    width: 2.6rem;
+    height: auto;
+    flex: none;
+    overflow: visible;
+  }
+  .logo__c {
+    stroke: currentColor;
+  }
+  .logo__barrel {
+    fill: currentColor;
+  }
+  .logo__wire,
+  .logo__dot {
+    stroke: var(--accent);
+    fill: var(--accent);
+  }
+  .logo__pulse {
+    stroke: color-mix(in oklab, var(--accent), white 65%);
+    stroke-dasharray: 5 60;
+    stroke-dashoffset: 65;
+    opacity: 0;
+  }
+  :global(a:hover) > .logo .logo__pulse,
+  .logo:hover .logo__pulse {
+    opacity: 1;
+    animation: logo-pulse 0.9s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  }
+  @keyframes logo-pulse {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  .logo__text {
+    display: grid;
+    gap: 0.28rem;
+  }
+  .logo__name {
+    font-weight: 650;
+    font-size: 1.12rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .logo__sub {
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    opacity: 0.72;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .logo:hover .logo__pulse {
+      animation: none;
+      opacity: 0;
+    }
+  }
+</style>

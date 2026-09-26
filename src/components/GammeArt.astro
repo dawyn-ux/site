@@ -1,0 +1,402 @@
+---
+/**
+ * Illustrations vectorielles des gammes (légères, nettes à toutes les tailles).
+ * Couleurs pilotées par les variables du thème : --accent (cuivre) et --ink.
+ */
+interface Props {
+  name: string;
+  class?: string;
+}
+const { name, class: className } = Astro.props;
+const uid = `art-${name}-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<svg
+  class:list={['art', className]}
+  viewBox="0 0 400 300"
+  role="img"
+  aria-hidden="true"
+  focusable="false"
+  preserveAspectRatio="xMidYMid meet"
+>
+  {
+    name === 'connecteur' && (
+      <g>
+        {/* fils sortant de l'arrière du boîtier */}
+        <g fill="none" stroke-linecap="round">
+          <path class="w-shadow" d="M196 96 C 170 60, 110 58, 30 70" stroke-width="12" />
+          <path class="w-ink" d="M196 96 C 170 60, 110 58, 30 70" stroke-width="9" />
+          <path class="w-shadow" d="M229 96 C 205 44, 130 36, 44 38" stroke-width="12" />
+          <path class="w-cu" d="M229 96 C 205 44, 130 36, 44 38" stroke-width="9" />
+          <path class="w-shadow" d="M262 96 C 250 30, 190 16, 96 14" stroke-width="12" />
+          <path class="w-mid" d="M262 96 C 250 30, 190 16, 96 14" stroke-width="9" />
+          <path class="w-shadow" d="M295 96 C 300 40, 270 10, 190 -4" stroke-width="12" />
+          <path class="w-light" d="M295 96 C 300 40, 270 10, 190 -4" stroke-width="9" />
+        </g>
+        {/* boîtier */}
+        <path class="f-top" d="M150 112 L182 88 H336 L304 112 Z" />
+        <path class="f-side" d="M304 112 L336 88 V160 L304 184 Z" />
+        <rect class="f-front" x="150" y="112" width="154" height="72" rx="4" />
+        <rect class="f-top" x="206" y="93" width="56" height="10" rx="2" transform="skewX(-50) translate(110 0)" />
+        {[0, 1, 2, 3].map((i) => (
+          <g>
+            <rect class="cavity" x={163 + i * 34} y="128" width="22" height="30" rx="3" />
+            <rect class="pin" x={170 + i * 34} y="138" width="8" height="12" rx="1.5" />
+          </g>
+        ))}
+        <path class="edge" d="M150 112 L182 88 H336 L304 112 M304 112 V184 M336 88 V160 L304 184" />
+        {/* contact serti isolé */}
+        <g transform="translate(40 206) rotate(-8)">
+          <path class="w-ink" d="M-40 26 H38" stroke-width="12" stroke-linecap="round" fill="none" />
+          <path class="strands" d="M38 22 H62 M38 26 H62 M38 30 H62" />
+          <path class="metal" d="M52 16 h26 l4 4 v12 l-4 4 h-26 z" />
+          <path class="metal" d="M84 18 h54 a4 4 0 0 1 4 4 v8 a4 4 0 0 1 -4 4 h-54 z" />
+          <path class="edge" d="M60 16 v20 M70 16 v20" />
+          <rect class="metal-dark" x="120" y="22" width="16" height="8" rx="2" />
+        </g>
+        <text class="label mono" x="304" y="226">PAS 4,20</text>
+        <path class="dim" d="M163 200 H197 M163 195 V205 M197 195 V205" />
+      </g>
+    )
+  }
+
+  {
+    name === 'gaine' && (
+      <g>
+        <path class="w-shadow" d="M10 186 H390" stroke-width="22" stroke-linecap="round" fill="none" />
+        <path class="w-ink" d="M10 186 H390" stroke-width="18" stroke-linecap="round" fill="none" />
+        <path class="w-hl" d="M20 181 H380" stroke-width="2" fill="none" />
+        <path class="sleeve" d="M118 168 C 132 166, 140 162, 150 160 H262 C 272 162, 280 166, 294 168 V204 C 280 206, 272 210, 262 212 H150 C 140 210, 132 206, 118 204 Z" />
+        <path class="sleeve-hl" d="M152 168 H260" />
+        <g class="heat" fill="none" stroke-linecap="round">
+          <path d="M170 132 c 8 -10 -8 -20 0 -30 s -8 -20 0 -30" />
+          <path d="M206 136 c 8 -10 -8 -20 0 -30 s -8 -20 0 -30 s -8 -20 0 -30" />
+          <path d="M242 132 c 8 -10 -8 -20 0 -30 s -8 -20 0 -30" />
+        </g>
+        <path class="dim" d="M312 160 V212 M306 160 H318 M306 212 H318" />
+        <text class="label mono" x="326" y="191">2:1</text>
+        <text class="label mono" x="118" y="246">VERSAFIT</text>
+      </g>
+    )
+  }
+
+  {
+    name === 'tresse' && (
+      <g>
+        <defs>
+          <pattern id={`${uid}-braid`} width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+            <rect width="14" height="14" class="braid-bg" />
+            <path d="M0 3.5 H14 M0 10.5 H14" class="braid-a" />
+          </pattern>
+          <pattern id={`${uid}-braid2`} width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)">
+            <path d="M0 3.5 H14 M0 10.5 H14" class="braid-b" />
+          </pattern>
+          <linearGradient id={`${uid}-shade`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity="0.35" />
+            <stop offset="0.45" stop-color="#fff" stop-opacity="0" />
+            <stop offset="1" stop-color="#000" stop-opacity="0.28" />
+          </linearGradient>
+        </defs>
+        <path class="w-shadow" d="M0 150 H80" stroke-width="30" fill="none" />
+        <path class="w-ink" d="M0 150 H80" stroke-width="26" fill="none" />
+        <rect x="70" y="112" width="250" height="76" fill={`url(#${uid}-braid)`} />
+        <rect x="70" y="112" width="250" height="76" fill={`url(#${uid}-braid2)`} />
+        <rect x="70" y="112" width="250" height="76" fill={`url(#${uid}-shade)`} />
+        <path class="edge" d="M70 112 H320 M70 188 H320" />
+        <ellipse class="braid-end" cx="320" cy="150" rx="14" ry="38" />
+        <circle class="core-ink" cx="318" cy="138" r="7" />
+        <circle class="core-cu" cx="322" cy="158" r="7" />
+        <circle class="core-mid" cx="313" cy="160" r="5" />
+        <path class="w-cu" d="M334 150 C 360 150, 366 120, 396 116" stroke-width="7" fill="none" stroke-linecap="round" />
+        <path class="w-ink" d="M332 140 C 356 132, 370 96, 396 88" stroke-width="7" fill="none" stroke-linecap="round" />
+        <text class="label mono" x="70" y="226">BLINDAGE · CEM</text>
+      </g>
+    )
+  }
+
+  {
+    name === 'fil' && (
+      <g>
+        <ellipse class="flange-back" cx="236" cy="150" rx="26" ry="96" />
+        <rect class="core-bg" x="120" y="66" width="116" height="168" />
+        <g class="windings">
+          {Array.from({ length: 21 }, (_, i) => (
+            <path d={`M120 ${70 + i * 8} Q 178 ${74 + i * 8} 236 ${70 + i * 8}`} class={i % 3 === 0 ? 'wind-dark' : 'wind'} />
+          ))}
+        </g>
+        <ellipse class="flange" cx="120" cy="150" rx="26" ry="96" />
+        <ellipse class="hub" cx="120" cy="150" rx="8" ry="28" />
+        <path class="w-cu" d="M236 72 C 280 70, 300 110, 330 150 S 380 230, 398 236" stroke-width="3.5" fill="none" stroke-linecap="round" />
+        <text class="label mono" x="268" y="276">Ø 0,50 · CL. H</text>
+      </g>
+    )
+  }
+
+  {
+    name === 'faisceau' && (
+      <g fill="none" stroke-linecap="round">
+        {[
+          { y: 58, c: 'w-ink', l: 'L1' },
+          { y: 104, c: 'w-mid', l: 'L2' },
+          { y: 150, c: 'w-light', l: 'L3' },
+          { y: 196, c: 'w-cu', l: 'N' },
+          { y: 242, c: 'w-ink', l: 'PE' },
+        ].map((w, i) => (
+          <g>
+            <path class="w-shadow" d={`M0 ${w.y} H90 C 190 ${w.y}, 200 ${138 + i * 6}, 290 ${138 + i * 6} H400`} stroke-width="13" />
+            <path class={w.c} d={`M0 ${w.y} H90 C 190 ${w.y}, 200 ${138 + i * 6}, 290 ${138 + i * 6} H400`} stroke-width="10" />
+            <rect class="marker" x="40" y={w.y - 11} width="38" height="22" rx="4" />
+            <text class="marker-text mono" x="59" y={w.y + 4} text-anchor="middle">
+              {w.l}
+            </text>
+          </g>
+        ))}
+        <rect class="tie" x="304" y="124" width="14" height="52" rx="3" />
+        <rect class="tie-head" x="300" y="116" width="22" height="12" rx="2" />
+      </g>
+    )
+  }
+
+  {
+    name === 'outillage' && (
+      <g>
+        <g stroke-linecap="round" fill="none">
+          <path class="handle" d="M250 150 L 40 92" stroke-width="24" />
+          <path class="grip" d="M160 125 L 40 92" stroke-width="26" />
+          <path class="handle" d="M250 150 L 40 208" stroke-width="24" />
+          <path class="grip" d="M160 175 L 40 208" stroke-width="26" />
+          <path class="spring" d="M196 136 l 8 5 l -8 5 l 8 5 l -8 5 l 8 5 l -8 5" />
+        </g>
+        <path class="jaw" d="M238 136 L 326 112 Q 356 106 360 128 L 356 142 L 262 148 Z" />
+        <path class="jaw jaw--lower" d="M238 164 L 326 188 Q 356 194 360 172 L 356 158 L 262 152 Z" />
+        <path class="die" d="M300 131 h 30 l -4 11 h -22 z" />
+        <path class="die" d="M300 169 h 30 l -4 -11 h -22 z" />
+        <rect class="metal" x="294" y="144" width="44" height="12" rx="2" />
+        <path class="strands" d="M338 147 H352 M338 150 H352 M338 153 H352" />
+        <path class="w-cu" d="M352 150 H398" stroke-width="7" stroke-linecap="round" fill="none" />
+        <circle class="pivot" cx="250" cy="150" r="15" />
+        <circle class="pivot-in" cx="250" cy="150" r="5" />
+        <text class="label mono" x="40" y="262">SERTISSAGE</text>
+      </g>
+    )
+  }
+
+  {
+    name === 'tolerie' && (
+      <g>
+        <path class="f-top" d="M60 170 L200 100 L350 160 L210 230 Z" />
+        <path class="f-front" d="M60 170 V 190 L210 250 V230 Z" />
+        <path class="f-side" d="M210 230 V250 L350 180 V160 Z" />
+        <path class="f-side" d="M200 100 V 20 L350 80 V160 Z" />
+        <path class="f-top" d="M200 20 L214 12 L364 72 L350 80 Z" />
+        <path class="f-front" d="M350 80 L364 72 V152 L350 160 Z" />
+        {[0, 1].map((i) => (
+          <ellipse class="hole" cx={130 + i * 90} cy={172 + i * 14} rx="16" ry="8" transform={`rotate(-12 ${130 + i * 90} ${172 + i * 14})`} />
+        ))}
+        {[0, 1].map((i) => (
+          <ellipse class="hole" cx={245 + i * 60} cy={72 + i * 24} rx="8" ry="14" transform={`rotate(22 ${245 + i * 60} ${72 + i * 24})`} />
+        ))}
+        <path class="edge" d="M60 170 L200 100 L350 160 L210 230 Z M200 100 V20 L350 80 V160" />
+        <path class="dim" d="M40 186 L190 262 M40 180 V192 M190 256 V268" />
+        <text class="label mono" x="30" y="290">SUR PLAN</text>
+      </g>
+    )
+  }
+</svg>
+
+<style>
+  .art {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    color: var(--ink);
+    --art-front: color-mix(in oklab, var(--surface), var(--paper-2) 30%);
+    --art-top: #ffffff;
+    --art-side: color-mix(in oklab, var(--paper-2), var(--line-strong) 45%);
+  }
+  .f-front {
+    fill: var(--art-front);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .f-top {
+    fill: var(--art-top);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+  .f-side {
+    fill: var(--art-side);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+  .edge {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+  .cavity {
+    fill: var(--ink);
+  }
+  .pin {
+    fill: color-mix(in oklab, var(--accent), #fff 35%);
+  }
+  .w-shadow {
+    stroke: color-mix(in oklab, var(--ink), transparent 88%);
+  }
+  .w-ink {
+    stroke: var(--ink);
+  }
+  .w-cu {
+    stroke: var(--accent);
+  }
+  .w-mid {
+    stroke: color-mix(in oklab, var(--ink), var(--paper) 45%);
+  }
+  .w-light {
+    stroke: color-mix(in oklab, var(--line-strong), var(--paper) 10%);
+  }
+  .w-hl {
+    stroke: rgba(255, 255, 255, 0.25);
+  }
+  .strands {
+    stroke: var(--accent);
+    stroke-width: 2;
+  }
+  .metal {
+    fill: color-mix(in oklab, var(--paper-2), #9aa3a8 45%);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .metal-dark {
+    fill: var(--ink);
+  }
+  .label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    fill: var(--muted);
+  }
+  .dim {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.25;
+  }
+  .sleeve {
+    fill: color-mix(in oklab, var(--accent), var(--ink) 55%);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .sleeve-hl {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.28);
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+  .heat path {
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    opacity: 0.85;
+  }
+  .braid-bg {
+    fill: color-mix(in oklab, #b8bec2, var(--paper) 25%);
+  }
+  .braid-a {
+    stroke: color-mix(in oklab, #7d868c, var(--ink) 25%);
+    stroke-width: 3.5;
+    fill: none;
+  }
+  .braid-b {
+    stroke: color-mix(in oklab, #e8ecee, #fff 30%);
+    stroke-width: 3;
+    fill: none;
+  }
+  .braid-end {
+    fill: var(--ink);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .core-ink {
+    fill: color-mix(in oklab, var(--ink), #fff 30%);
+  }
+  .core-cu {
+    fill: var(--accent);
+  }
+  .core-mid {
+    fill: var(--line-strong);
+  }
+  .flange,
+  .flange-back {
+    fill: var(--art-front);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .flange-back {
+    fill: var(--art-side);
+  }
+  .hub {
+    fill: var(--ink);
+  }
+  .core-bg {
+    fill: color-mix(in oklab, var(--accent), var(--ink) 30%);
+  }
+  .wind {
+    fill: none;
+    stroke: color-mix(in oklab, var(--accent), #fff 22%);
+    stroke-width: 5;
+  }
+  .wind-dark {
+    fill: none;
+    stroke: color-mix(in oklab, var(--accent), var(--ink) 15%);
+    stroke-width: 5;
+  }
+  .marker {
+    fill: #fff;
+    stroke: var(--ink);
+    stroke-width: 1.25;
+  }
+  .marker-text {
+    fill: var(--ink);
+    stroke: none;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tie,
+  .tie-head {
+    fill: var(--ink);
+  }
+  .handle {
+    stroke: var(--ink);
+  }
+  .grip {
+    stroke: var(--accent);
+  }
+  .jaw {
+    fill: color-mix(in oklab, var(--paper-2), #8e979c 40%);
+    stroke: var(--ink);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+  .jaw--lower {
+    fill: color-mix(in oklab, var(--paper-2), #8e979c 60%);
+  }
+  .die {
+    fill: var(--ink);
+  }
+  .pivot {
+    fill: var(--ink);
+  }
+  .spring {
+    stroke: var(--muted);
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+  .pivot-in {
+    fill: color-mix(in oklab, var(--paper-2), #8e979c 30%);
+  }
+  .hole {
+    fill: var(--ink);
+    opacity: 0.85;
+  }
+</style>

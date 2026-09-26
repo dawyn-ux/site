@@ -1,0 +1,186 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+
+interface Props {
+  documents: CollectionEntry<'documents'>[];
+  compact?: boolean;
+}
+const { documents, compact = false } = Astro.props;
+
+const requestUrl = (title: string) =>
+  `/contact/?sujet=${encodeURIComponent('Demande de documentation')}&document=${encodeURIComponent(title)}`;
+---
+
+{
+  documents.length === 0 ? (
+    <div class="docs-empty">
+      <Icon name="file-text" size={28} />
+      <p>Aucun document n'est encore publié ici.</p>
+      <a href="/contact/?sujet=Demande%20de%20documentation" class="link-arrow">
+        Demander une documentation <Icon name="arrow-up-right" size={16} />
+      </a>
+    </div>
+  ) : (
+    <ul class:list={['docs', { 'docs--compact': compact }]}>
+      {documents.map((d, i) => {
+        const href = d.data.file ?? d.data.external_url;
+        const isPdf = (href ?? '').toLowerCase().endsWith('.pdf');
+        return (
+          <li
+            class="doc"
+            data-reveal
+            style={`--i:${i % 3}`}
+            data-brand={d.data.brand ?? ''}
+            data-type={d.data.type}
+          >
+            <span class="doc__icon">
+              <Icon name={isPdf || !href ? 'file-pdf' : 'file-text'} size={26} />
+            </span>
+            <div class="doc__body">
+              <p class="doc__meta mono">
+                <span>{d.data.type}</span>
+                {d.data.brand && <span>{d.data.brand}</span>}
+                {d.data.language && <span>{d.data.language}</span>}
+              </p>
+              <h3 class="doc__title">{d.data.title}</h3>
+              {!compact && d.data.description && <p class="doc__desc">{d.data.description}</p>}
+            </div>
+            {href ? (
+              <a
+                class="doc__action"
+                href={href}
+                {...(d.data.file ? { download: '' } : { target: '_blank', rel: 'noopener' })}
+                aria-label={`Télécharger ${d.data.title}`}
+              >
+                <Icon name="download" size={18} />
+                <span>Télécharger</span>
+              </a>
+            ) : (
+              <a class="doc__action doc__action--request" href={requestUrl(d.data.title)} aria-label={`Demander ${d.data.title}`}>
+                <Icon name="envelope" size={18} />
+                <span>Sur demande</span>
+              </a>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  )
+}
+
+<style>
+  .docs {
+    list-style: none;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .doc {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem 1.25rem;
+    align-items: center;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    transition:
+      border-color 0.3s var(--ease),
+      transform 0.5s var(--ease),
+      box-shadow 0.5s var(--ease);
+  }
+  .doc:hover {
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow);
+  }
+  .doc[hidden] {
+    display: none;
+  }
+  .doc__icon {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 0.9rem;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+  }
+  .doc__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.9rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .doc__meta span + span::before {
+    content: '·';
+    margin-right: 0.9rem;
+    color: var(--line-strong);
+  }
+  .doc__title {
+    margin-top: 0.3rem;
+    font-size: 1.1rem;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+  }
+  .doc__desc {
+    margin-top: 0.35rem;
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  .doc__action {
+    grid-column: 1 / -1;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1.1rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--on-ink);
+    font-size: 0.9rem;
+    font-weight: 550;
+    text-decoration: none;
+    transition:
+      background-color 0.3s var(--ease),
+      transform 0.3s var(--ease);
+  }
+  .doc__action:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+  .doc__action:active {
+    transform: scale(0.98);
+  }
+  .doc__action--request {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--line-strong);
+  }
+  .doc__action--request:hover {
+    border-color: var(--accent);
+    background: transparent;
+    color: var(--accent-strong);
+  }
+  @media (min-width: 640px) {
+    .doc {
+      grid-template-columns: auto 1fr auto;
+    }
+    .doc__action {
+      grid-column: auto;
+    }
+  }
+  .docs-empty {
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+    padding: 3rem 1.5rem;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius);
+    text-align: center;
+    color: var(--muted);
+  }
+</style>

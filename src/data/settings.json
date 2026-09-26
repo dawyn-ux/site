@@ -1,0 +1,52 @@
+{
+  "site_name": "Connect Systèmes",
+  "legal_name": "CONNECT SYSTEMES",
+  "tagline": "Maîtrisez vos connexions électriques",
+  "description": "Distributeur en connectique à Saint-Priest (Lyon) depuis 1991 : cosses, contacts et connecteurs STOCKO CONTACT, gaines thermorétractables RAYCHEM, tresses métalliques, fils émaillés et accessoires de faisceaux.",
+  "contact": {
+    "phone": "04 78 90 13 15",
+    "fax": "04 78 90 63 32",
+    "email": "commercial@connect-systemes.fr",
+    "street": "31 Impasse de la Balme",
+    "postal_code": "69800",
+    "city": "Saint-Priest",
+    "region": "Auvergne-Rhône-Alpes",
+    "hours": ""
+  },
+  "legal": {
+    "form": "SARL au capital de 40 000 €",
+    "capital": "40 000 €",
+    "rcs": "RCS Lyon 384 615 167",
+    "siret": "384 615 167 00044",
+    "vat": "",
+    "founded": 1991,
+    "publisher": ""
+  },
+  "partners": [
+    {
+      "name": "STOCKO CONTACT",
+      "group": "Groupe WIELAND",
+      "text": "STOCKO CONTACT développe et fabrique des systèmes de connexion et propose à ses partenaires des solutions de sertissage performantes pour une rationalisation optimale.",
+      "url": "https://www.stocko-contact.com/fr/"
+    },
+    {
+      "name": "RAYCHEM",
+      "group": "TE Connectivity",
+      "text": "Gaines thermorétractables et solutions de protection des câbles et faisceaux, dont la gamme VERSAFIT.",
+      "url": "https://www.te.com/fr/products/heat-shrink-tubing.html"
+    }
+  ],
+  "theme": {
+    "accent": "#C0632F",
+    "ink": "#1A1715"
+  },
+  "social": {
+    "linkedin": "",
+    "facebook": "",
+    "youtube": ""
+  },
+  "seo": {
+    "default_image": "/og-default.png",
+    "google_site_verification": ""
+  }
+}

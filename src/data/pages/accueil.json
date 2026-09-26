@@ -1,0 +1,91 @@
+{
+  "hero": {
+    "eyebrow": "Connectique depuis 1991 · Saint-Priest",
+    "title": "Maîtrisez vos connexions",
+    "highlight": "électriques.",
+    "text": "CONNECT SYSTEMES vous propose une gamme complète de produits et de services pour la maîtrise de vos connexions électriques : de la cosse sertie jusqu'au faisceau protégé et identifié.",
+    "primary_cta": { "label": "Découvrir nos gammes", "url": "/gammes/" },
+    "secondary_cta": { "label": "Demander un devis", "url": "/contact/" }
+  },
+  "marquee": [
+    "Cosses",
+    "Contacts",
+    "Connecteurs",
+    "Gaines thermorétractables",
+    "Tresses métalliques",
+    "Fils émaillés",
+    "Accessoires de faisceaux",
+    "Outillage de sertissage",
+    "Tôlerie industrielle"
+  ],
+  "expertise": {
+    "eyebrow": "Notre offre",
+    "title": "Une offre complète, de la cosse au faisceau.",
+    "text": "Depuis plus de trente ans, nous accompagnons les fabricants et les câbleurs dans le choix, l'approvisionnement et la mise en œuvre de leurs composants de connexion.",
+    "items": [
+      {
+        "title": "Cosses et connecteurs adaptés",
+        "text": "Contacts à sertir, connecteurs fil-à-fil et fil-à-carte, technologie autodénudante : la solution adaptée à chaque application."
+      },
+      {
+        "title": "Conducteurs électriques performants",
+        "text": "Fils émaillés et conducteurs sélectionnés pour leurs performances électriques et thermiques."
+      },
+      {
+        "title": "Protections mécaniques et électriques",
+        "text": "Gaines thermorétractables et tresses métalliques pour protéger, isoler et blinder vos câblages."
+      },
+      {
+        "title": "Accessoires de faisceaux pour l'identification",
+        "text": "Repérage, manchons et accessoires pour des faisceaux lisibles, conformes et faciles à maintenir."
+      },
+      {
+        "title": "Analyse de coupe et de sertissage",
+        "text": "Contrôle de la qualité de vos sertissages pour des connexions fiables et durables."
+      }
+    ]
+  },
+  "gammes_section": {
+    "eyebrow": "Nos gammes",
+    "title": "Des composants choisis pour durer.",
+    "text": "Explorez nos familles de produits et téléchargez la documentation technique de nos fabricants partenaires."
+  },
+  "scene_section": {
+    "eyebrow": "Anatomie d'une connexion",
+    "text": "Survolez le faisceau pour découvrir les éléments qui garantissent une connexion fiable : contacts sertis, boîtier, gaine thermorétractable et tresse de protection."
+  },
+  "partners_section": {
+    "eyebrow": "Fabricants partenaires",
+    "title": "Des marques de référence.",
+    "text": "Retrouvez toutes les solutions de connectique STOCKO CONTACT et du groupe WIELAND auquel elle appartient, ainsi que les gaines thermorétractables RAYCHEM."
+  },
+  "sectors": {
+    "eyebrow": "Secteurs d'application",
+    "title": "Là où nos connexions travaillent.",
+    "items": [
+      { "title": "Électroménager", "text": "Connexions fiables pour les appareils du quotidien.", "icon": "appliance" },
+      { "title": "Chauffage", "text": "Composants adaptés aux contraintes thermiques.", "icon": "flame" },
+      { "title": "Automobile", "text": "Contacts et protections pour environnements sévères.", "icon": "car" },
+      { "title": "Industrie", "text": "Câblage d'armoires, machines et équipements.", "icon": "factory" },
+      { "title": "Électronique", "text": "Connecteurs fil-à-carte au pas fin.", "icon": "chip" },
+      { "title": "Multimédia", "text": "Connectique compacte pour appareils grand public.", "icon": "screen" }
+    ]
+  },
+  "figures": [
+    { "value": "1991", "label": "Année de création" },
+    { "value": "35 ans", "label": "D'expertise en connectique" },
+    { "value": "6", "label": "Secteurs d'application" },
+    { "value": "Lyon Est", "label": "Basés à Saint-Priest (69)" }
+  ],
+  "cta": {
+    "title": "Un projet de câblage ? Parlons-en.",
+    "text": "Décrivez-nous votre application : notre équipe vous oriente vers les composants adaptés et vous répond rapidement.",
+    "button": { "label": "Nous contacter", "url": "/contact/" }
+  },
+  "seo": {
+    "title": "Connectique, cosses et connecteurs à Lyon | Connect Systèmes",
+    "description": "Distributeur en connectique à Saint-Priest (Lyon) depuis 1991 : cosses et connecteurs STOCKO, gaines thermorétractables RAYCHEM, tresses, fils émaillés et accessoires de faisceaux.",
+    "image": "",
+    "noindex": false
+  }
+}

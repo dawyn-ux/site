@@ -1,0 +1,114 @@
+---
+import Icon from './Icon.astro';
+import { pages, settings, phoneHref } from '../lib/content';
+
+interface Props {
+  title?: string;
+  text?: string;
+  button?: { label: string; url: string };
+}
+const cta = pages.accueil.cta;
+const { title = cta.title, text = cta.text, button = cta.button } = Astro.props;
+---
+
+<section class="cta section--ink">
+  <div class="cta__wire" aria-hidden="true">
+    <svg viewBox="0 0 1200 200" preserveAspectRatio="none">
+      <path d="M0 150 C 300 150, 360 60, 620 60 S 980 140, 1200 90" />
+      <path class="cta__pulse" d="M0 150 C 300 150, 360 60, 620 60 S 980 140, 1200 90" />
+    </svg>
+  </div>
+  <div class="container cta__inner">
+    <div data-reveal>
+      <h2 class="h2 cta__title">{title}</h2>
+      <p class="lead cta__text">{text}</p>
+    </div>
+    <div class="cta__actions" data-reveal style="--i:1">
+      <a href={button.url} class="btn btn--accent" data-magnetic>
+        {button.label}
+        <Icon name="arrow-right" size={18} />
+      </a>
+      <a href={phoneHref(settings.contact.phone)} class="cta__phone mono">
+        <Icon name="phone" size={18} />
+        {settings.contact.phone}
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(4.5rem, 9vw, 7.5rem);
+  }
+  .cta__wire {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 60%;
+    opacity: 0.9;
+    pointer-events: none;
+  }
+  .cta__wire svg {
+    width: 100%;
+    height: 100%;
+  }
+  .cta__wire path {
+    fill: none;
+    stroke: var(--ink-line);
+    stroke-width: 10;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .cta__wire .cta__pulse {
+    stroke: var(--accent);
+    stroke-width: 3;
+    stroke-dasharray: 90 1400;
+    animation: cta-pulse 5s linear infinite;
+  }
+  @keyframes cta-pulse {
+    from {
+      stroke-dashoffset: 1490;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  .cta__inner {
+    position: relative;
+    display: grid;
+    gap: 2.5rem;
+    align-items: end;
+  }
+  .cta__title {
+    max-width: 16ch;
+  }
+  .cta__text {
+    margin-top: 1.25rem;
+  }
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem 2rem;
+  }
+  .cta__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.1rem;
+    text-decoration: none;
+    color: var(--on-ink);
+  }
+  .cta__phone:hover {
+    color: var(--accent-on-ink);
+  }
+  @media (min-width: 960px) {
+    .cta__inner {
+      grid-template-columns: 1.4fr 1fr;
+    }
+    .cta__actions {
+      justify-content: flex-end;
+    }
+  }
+</style>

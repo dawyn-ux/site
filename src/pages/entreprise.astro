@@ -1,0 +1,235 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import Logo from '../components/Logo.astro';
+import { pages, settings, md, mapsUrl, fullAddress } from '../lib/content';
+
+const page = pages.entreprise;
+const breadcrumbs = [{ name: "L'entreprise", url: '/entreprise/' }];
+const years = new Date().getFullYear() - settings.legal.founded;
+---
+
+<Base
+  title={page.title}
+  seoTitle={page.seo.title}
+  description={page.seo.description}
+  image={page.seo.image}
+  noindex={page.seo.noindex}
+  breadcrumbs={breadcrumbs}
+  headerOverlay
+>
+  <PageHeader eyebrow={page.eyebrow} title={page.title} intro={page.intro} breadcrumbs={breadcrumbs} />
+
+  <section class="section about">
+    <div class="container about__grid">
+      <div class="about__card" data-reveal data-tilt>
+        <Logo tone="paper" />
+        <p class="about__years"><span data-count={String(years)}>{years}</span><small>ans</small></p>
+        <p class="about__caption mono">d'expertise en connexion électrique</p>
+        <a href={mapsUrl()} target="_blank" rel="noopener" class="about__address">
+          <Icon name="map-pin" size={18} />
+          {fullAddress()}
+        </a>
+      </div>
+      <div class="prose about__text" data-reveal style="--i:1" set:html={md(page.body)} />
+    </div>
+  </section>
+
+  <section class="section section--paper-2 timeline">
+    <div class="container">
+      <p class="eyebrow" data-reveal>Repères</p>
+      <ol class="timeline__list">
+        {
+          page.timeline.map((t, i) => (
+            <li class="milestone" data-reveal style={`--i:${i}`}>
+              <p class="milestone__year">{t.year}</p>
+              <h2 class="milestone__title">{t.title}</h2>
+              <p class="milestone__text">{t.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section values">
+    <div class="container values__grid">
+      <div>
+        <p class="eyebrow" data-reveal>Nos engagements</p>
+        <h2 class="h2 values__title" data-reveal style="--i:1">Ce qui guide notre travail.</h2>
+      </div>
+      <ul class="values__list">
+        {
+          page.values.map((v, i) => (
+            <li class="value" data-reveal style={`--i:${i}`}>
+              <span class="value__num mono">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="h3">{v.title}</h3>
+              <p>{v.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .about {
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
+  .about__grid {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+  .about__card {
+    display: grid;
+    gap: 0.5rem;
+    padding: clamp(1.75rem, 4vw, 3rem);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(120% 100% at 100% 0%, color-mix(in oklab, var(--accent), transparent 70%), transparent 60%),
+      var(--ink);
+    color: var(--on-ink);
+    transition: transform 0.6s var(--ease);
+  }
+  .about__years {
+    margin-top: 3rem;
+    font-size: clamp(5rem, 3rem + 8vw, 9rem);
+    font-weight: 650;
+    letter-spacing: -0.07em;
+    line-height: 0.85;
+  }
+  .about__years small {
+    font-size: 0.3em;
+    letter-spacing: -0.02em;
+    margin-left: 0.4rem;
+    color: var(--accent-on-ink);
+  }
+  .about__caption {
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--on-ink-muted);
+  }
+  .about__address {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--ink-line);
+    color: var(--on-ink-muted);
+    text-decoration: none;
+    font-size: 0.92rem;
+  }
+  .about__address:hover {
+    color: var(--on-ink);
+  }
+  .about__text {
+    font-size: 1.12rem;
+  }
+  @media (min-width: 1024px) {
+    .about__grid {
+      grid-template-columns: 5fr 7fr;
+      gap: 5rem;
+    }
+    .about__card {
+      position: sticky;
+      top: calc(var(--header-h) + 1.5rem);
+    }
+  }
+
+  .timeline__list {
+    list-style: none;
+    display: grid;
+    gap: 0;
+    margin-top: 2.5rem;
+  }
+  .milestone {
+    position: relative;
+    padding: 2rem 0 2rem 2rem;
+    border-left: 2px solid var(--line-strong);
+  }
+  .milestone::before {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: 2.5rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 5px var(--paper-2);
+  }
+  .milestone__year {
+    font-size: clamp(1.8rem, 1.2rem + 2vw, 2.8rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    color: var(--accent-strong);
+  }
+  .milestone__title {
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+  }
+  .milestone__text {
+    margin-top: 0.35rem;
+    color: var(--muted);
+    max-width: 40ch;
+  }
+  @media (min-width: 900px) {
+    .timeline__list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .milestone {
+      padding: 2.5rem 2rem 0 0;
+      border-left: 0;
+      border-top: 2px solid var(--line-strong);
+    }
+    .milestone::before {
+      left: 0;
+      top: -7px;
+    }
+  }
+
+  .values__grid {
+    display: grid;
+    gap: 3rem;
+  }
+  .values__title {
+    margin-top: 1rem;
+    max-width: 14ch;
+  }
+  .values__list {
+    list-style: none;
+    display: grid;
+    border-top: 1px solid var(--line);
+  }
+  .value {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 0.35rem 1rem;
+    padding-block: 1.75rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .value__num {
+    grid-row: span 2;
+    font-size: 0.75rem;
+    color: var(--accent-strong);
+    padding-top: 0.4rem;
+  }
+  .value p {
+    color: var(--muted);
+  }
+  @media (min-width: 960px) {
+    .values__grid {
+      grid-template-columns: 1fr 1.4fr;
+      gap: 5rem;
+    }
+  }
+</style>

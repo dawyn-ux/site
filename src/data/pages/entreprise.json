@@ -1,0 +1,22 @@
+{
+  "eyebrow": "L'entreprise",
+  "title": "Spécialiste de la connexion électrique depuis 1991.",
+  "intro": "Implantée à Saint-Priest, aux portes de Lyon, CONNECT SYSTEMES distribue des composants de connexion et de protection auprès des industriels et des câbleurs.",
+  "body": "Fondée en 1991, CONNECT SYSTEMES s'est construite autour d'une conviction simple : une connexion électrique fiable repose autant sur la qualité des composants que sur la maîtrise de leur mise en œuvre.\n\nC'est pourquoi nous associons une offre produits complète — cosses, contacts, connecteurs, conducteurs, protections et accessoires de faisceaux — à un véritable accompagnement technique, jusqu'à l'analyse de coupe et de sertissage.\n\nPartenaire de STOCKO CONTACT (groupe WIELAND) et distributeur des gaines thermorétractables RAYCHEM, nous travaillons avec des marques reconnues pour leur exigence de qualité.",
+  "timeline": [
+    { "year": "1991", "title": "Création", "text": "Fondation de CONNECT SYSTEMES dans la région lyonnaise." },
+    { "year": "Partenariats", "title": "Des fabricants de référence", "text": "Distribution des solutions STOCKO CONTACT (groupe WIELAND) et des gaines RAYCHEM." },
+    { "year": "Aujourd'hui", "title": "Saint-Priest", "text": "Une équipe à taille humaine, implantée à Saint-Priest, au service de ses clients industriels." }
+  ],
+  "values": [
+    { "title": "Proximité", "text": "Un interlocuteur dédié qui connaît vos applications et vos contraintes." },
+    { "title": "Exigence technique", "text": "Des composants sélectionnés et une mise en œuvre maîtrisée, jusqu'au sertissage." },
+    { "title": "Réactivité", "text": "Des réponses rapides à vos demandes de prix, d'échantillons et de documentation." }
+  ],
+  "seo": {
+    "title": "L'entreprise : distributeur en connectique depuis 1991",
+    "description": "CONNECT SYSTEMES, distributeur de composants de connexion électrique à Saint-Priest (Lyon) depuis 1991, partenaire STOCKO CONTACT et RAYCHEM.",
+    "image": "",
+    "noindex": false
+  }
+}

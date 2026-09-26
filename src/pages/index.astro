@@ -1,0 +1,595 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/home/Hero.astro';
+import GammeCard from '../components/GammeCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { pages, settings, formatDate } from '../lib/content';
+
+const home = pages.accueil;
+const gammes = (await getCollection('gammes')).sort((a, b) => a.data.order - b.data.order);
+const news = (await getCollection('actualites', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const sizes = ['lg', 'md', 'md', 'md', 'md', 'md', 'wide'] as const;
+
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Gammes de produits',
+  itemListElement: gammes.map((g, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: g.data.title,
+    url: new URL(`/gammes/${g.id}/`, Astro.site).href,
+  })),
+};
+---
+
+<Base
+  title={settings.site_name}
+  seoTitle={home.seo.title}
+  description={home.seo.description}
+  image={home.seo.image}
+  noindex={home.seo.noindex}
+  headerOverlay
+  jsonLd={[itemList]}
+>
+  <Hero />
+
+  {/* Bandeau défilant */}
+  <section class="marquee section--ink" aria-label="Nos familles de produits">
+    <div class="marquee__track">
+      {
+        [0, 1].map((dup) => (
+          <ul class="marquee__list" aria-hidden={dup === 1 ? 'true' : undefined}>
+            {home.marquee.map((item) => (
+              <li>
+                <span>{item}</span>
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <circle cx="10" cy="10" r="4" />
+                </svg>
+              </li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </section>
+
+  {/* Notre offre */}
+  <section class="section expertise">
+    <div class="container expertise__grid">
+      <div class="expertise__intro">
+        <p class="eyebrow" data-reveal>{home.expertise.eyebrow}</p>
+        <h2 class="h2" data-reveal style="--i:1">{home.expertise.title}</h2>
+        <p class="lead" data-reveal style="--i:2">{home.expertise.text}</p>
+        <a href="/services/" class="link-arrow" data-reveal style="--i:3">
+          Nos services <Icon name="arrow-up-right" size={16} />
+        </a>
+      </div>
+      <ol class="expertise__list">
+        {
+          home.expertise.items.map((item, i) => (
+            <li class="expertise__item" data-reveal>
+              <span class="expertise__num mono">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3 class="h3">{item.title}</h3>
+                <p>{item.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  {/* Gammes */}
+  <section class="section section--paper-2 gammes">
+    <div class="container">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow" data-reveal>{home.gammes_section.eyebrow}</p>
+          <h2 class="h2" data-reveal style="--i:1">{home.gammes_section.title}</h2>
+        </div>
+        <div class="section-head__side" data-reveal style="--i:2">
+          <p class="lead">{home.gammes_section.text}</p>
+          <a href="/gammes/" class="link-arrow">Toutes les gammes <Icon name="arrow-up-right" size={16} /></a>
+        </div>
+      </header>
+      <div class="bento">
+        {gammes.map((g, i) => <GammeCard gamme={g} index={i} size={sizes[i] ?? 'md'} />)}
+      </div>
+    </div>
+  </section>
+
+  {/* Chiffres clés */}
+  <section class="figures section--ink" aria-label="Chiffres clés">
+    <div class="container figures__grid">
+      {
+        home.figures.map((f, i) => (
+          <div class="figure" data-reveal style={`--i:${i}`}>
+            <p class="figure__value" data-count={/\d/.test(f.value) ? f.value : undefined}>
+              {f.value}
+            </p>
+            <p class="figure__label mono">{f.label}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  {/* Partenaires */}
+  <section class="section partners">
+    <div class="container">
+      <header class="section-head">
+        <div>
+          <p class="eyebrow" data-reveal>{home.partners_section.eyebrow}</p>
+          <h2 class="h2" data-reveal style="--i:1">{home.partners_section.title}</h2>
+        </div>
+        <p class="lead section-head__side" data-reveal style="--i:2">{home.partners_section.text}</p>
+      </header>
+      <div class="partners__grid">
+        {
+          settings.partners.map((p, i) => (
+            <article class="partner" data-reveal data-tilt style={`--i:${i}`}>
+              <p class="partner__group mono">{p.group}</p>
+              <h3 class="partner__name">{p.name}</h3>
+              <p class="partner__text">{p.text}</p>
+              {p.url && (
+                <a href={p.url} class="link-arrow" target="_blank" rel="noopener">
+                  Site du fabricant <Icon name="arrow-up-right" size={16} />
+                </a>
+              )}
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* Secteurs */}
+  <section class="section section--paper-2 sectors">
+    <div class="container sectors__grid">
+      <div class="sectors__intro">
+        <p class="eyebrow" data-reveal>{home.sectors.eyebrow}</p>
+        <h2 class="h2" data-reveal style="--i:1">{home.sectors.title}</h2>
+      </div>
+      <ul class="sectors__list">
+        {
+          home.sectors.items.map((s, i) => (
+            <li class="sector" data-reveal style={`--i:${i % 3}`}>
+              <span class="sector__icon">
+                <Icon name={s.icon} size={28} />
+              </span>
+              <h3 class="sector__title">{s.title}</h3>
+              <p class="sector__text">{s.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {/* Actualités */}
+  {
+    news.length > 0 && (
+      <section class="section news">
+        <div class="container">
+          <header class="section-head">
+            <div>
+              <p class="eyebrow" data-reveal>{pages.actualites.eyebrow}</p>
+              <h2 class="h2" data-reveal style="--i:1">
+                Dernières nouvelles.
+              </h2>
+            </div>
+            <div class="section-head__side" data-reveal style="--i:2">
+              <a href="/actualites/" class="link-arrow">
+                Toutes les actualités <Icon name="arrow-up-right" size={16} />
+              </a>
+            </div>
+          </header>
+          <ul class="news__list">
+            {news.map((n) => (
+              <li data-reveal>
+                <a href={`/actualites/${n.id}/`} class="news__row">
+                  <time class="mono" datetime={n.data.date.toISOString()}>
+                    {formatDate(n.data.date)}
+                  </time>
+                  <span class="news__title">{n.data.title}</span>
+                  <span class="news__summary">{n.data.summary}</span>
+                  <Icon name="arrow-up-right" size={20} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <CtaBand />
+</Base>
+
+<style>
+  /* Bandeau défilant ---------------------------------------------------- */
+  .marquee {
+    overflow: hidden;
+    padding-block: 1.35rem;
+    border-block: 1px solid var(--ink-line);
+  }
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    animation: marquee 38s linear infinite;
+  }
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
+  .marquee__list {
+    display: flex;
+    list-style: none;
+    flex: none;
+  }
+  .marquee__list li {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding-right: 2rem;
+    font-size: clamp(1.25rem, 1rem + 1.2vw, 2rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+  }
+  .marquee__list svg {
+    width: 0.9rem;
+    fill: var(--accent);
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* En-têtes de section ---------------------------------------------------- */
+  .section-head {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+  .section-head .h2 {
+    margin-top: 1rem;
+    max-width: 16ch;
+  }
+  .section-head__side {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+    align-self: end;
+  }
+  @media (min-width: 960px) {
+    .section-head {
+      grid-template-columns: 1.2fr 1fr;
+      align-items: end;
+    }
+    .section-head__side {
+      justify-self: end;
+    }
+  }
+
+  /* Notre offre -------------------------------------------------------------- */
+  .expertise__grid {
+    display: grid;
+    gap: 3rem;
+  }
+  .expertise__intro {
+    display: grid;
+    gap: 1.4rem;
+    justify-items: start;
+    align-content: start;
+  }
+  .expertise__list {
+    list-style: none;
+    position: relative;
+    border-top: 1px solid var(--line);
+  }
+  .expertise__list::before,
+  .expertise__list::after {
+    content: '';
+    position: absolute;
+    left: 1.05rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--line-strong);
+  }
+  .expertise__list::after {
+    background: var(--accent);
+    transform-origin: top;
+    transform: scaleY(1);
+  }
+  @supports (animation-timeline: view()) {
+    .expertise__list::after {
+      animation: wire-fill linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 55%;
+    }
+  }
+  @keyframes wire-fill {
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+  .expertise__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.2rem 1fr;
+    gap: 1.25rem;
+    padding: 1.75rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .expertise__num {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    font-size: 0.72rem;
+    color: var(--accent-strong);
+    transition:
+      background-color 0.4s var(--ease),
+      color 0.4s var(--ease);
+  }
+  .expertise__item:hover .expertise__num {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .expertise__item p {
+    margin-top: 0.5rem;
+    color: var(--muted);
+    max-width: 52ch;
+  }
+  @media (min-width: 960px) {
+    .expertise__grid {
+      grid-template-columns: 1fr 1.25fr;
+      gap: 5rem;
+    }
+    .expertise__intro {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+
+  /* Bento des gammes ------------------------------------------------------ */
+  .bento {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 700px) {
+    .bento {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .bento > :global(.gcard--lg),
+    .bento > :global(.gcard--wide) {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 1100px) {
+    .bento {
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .bento > :global(:nth-child(1)) {
+      grid-column: 1 / span 7;
+      grid-row: span 2;
+    }
+    .bento > :global(:nth-child(2)),
+    .bento > :global(:nth-child(3)) {
+      grid-column: span 5;
+    }
+    .bento > :global(:nth-child(4)),
+    .bento > :global(:nth-child(5)),
+    .bento > :global(:nth-child(6)) {
+      grid-column: span 4;
+    }
+    .bento > :global(:nth-child(7)) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* Chiffres ---------------------------------------------------------------- */
+  .figures {
+    padding-block: clamp(3.5rem, 7vw, 5.5rem);
+  }
+  .figures__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem 1.5rem;
+  }
+  .figure {
+    border-left: 1px solid var(--ink-line);
+    padding-left: 1.25rem;
+  }
+  .figure__value {
+    font-size: clamp(2.2rem, 1.4rem + 3vw, 4rem);
+    font-weight: 600;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .figure__label {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--on-ink-muted);
+  }
+  .figure:first-child .figure__value {
+    color: var(--accent-on-ink);
+  }
+  @media (min-width: 900px) {
+    .figures__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* Partenaires ------------------------------------------------------------- */
+  .partners__grid {
+    display: grid;
+    gap: 1rem;
+  }
+  .partner {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: 1rem;
+    padding: clamp(1.75rem, 4vw, 3rem);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    background:
+      linear-gradient(135deg, color-mix(in oklab, var(--surface), transparent 0%), var(--paper-2));
+    transition: transform 0.6s var(--ease);
+    will-change: transform;
+  }
+  .partner__group {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-strong);
+  }
+  .partner__name {
+    font-size: clamp(2.2rem, 1.4rem + 3.4vw, 4.2rem);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+  }
+  .partner__text {
+    color: var(--muted);
+    max-width: 46ch;
+  }
+  @media (min-width: 900px) {
+    .partners__grid {
+      grid-template-columns: 1.15fr 1fr;
+    }
+    .partner:nth-child(2) {
+      margin-top: 3rem;
+    }
+  }
+
+  /* Secteurs ---------------------------------------------------------------- */
+  .sectors__grid {
+    display: grid;
+    gap: 3rem;
+  }
+  .sectors__intro .h2 {
+    margin-top: 1rem;
+    max-width: 12ch;
+  }
+  .sectors__list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-top: 1px solid var(--line-strong);
+    border-left: 1px solid var(--line-strong);
+  }
+  .sector {
+    padding: 1.5rem 1.25rem;
+    border-right: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+    transition: background-color 0.4s var(--ease);
+  }
+  .sector:hover {
+    background: var(--surface);
+  }
+  .sector__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.9rem;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    transition: transform 0.6s var(--ease);
+  }
+  .sector:hover .sector__icon {
+    transform: translateY(-3px) rotate(-6deg);
+  }
+  .sector__title {
+    margin-top: 1.25rem;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+  }
+  .sector__text {
+    margin-top: 0.35rem;
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  @media (min-width: 900px) {
+    .sectors__grid {
+      grid-template-columns: 1fr 2fr;
+      gap: 4rem;
+    }
+    .sectors__list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .sector {
+      padding: 2rem 1.75rem;
+    }
+  }
+  @media (max-width: 480px) {
+    .sectors__list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Actualités ---------------------------------------------------------- */
+  .news__list {
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+  .news__row {
+    display: grid;
+    gap: 0.5rem 2rem;
+    padding: 1.75rem 0;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    transition: padding 0.5s var(--ease);
+  }
+  .news__row time {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .news__title {
+    font-size: 1.35rem;
+    font-weight: 550;
+    letter-spacing: -0.02em;
+  }
+  .news__summary {
+    color: var(--muted);
+  }
+  .news__row :global(.icon) {
+    color: var(--accent);
+    transition: transform 0.4s var(--ease);
+  }
+  .news__row:hover :global(.icon) {
+    transform: translate(3px, -3px);
+  }
+  @media (min-width: 900px) {
+    .news__row {
+      grid-template-columns: 11rem 1.1fr 1.4fr auto;
+      align-items: baseline;
+    }
+    .news__row:hover {
+      padding-inline: 1rem;
+    }
+  }
+</style>

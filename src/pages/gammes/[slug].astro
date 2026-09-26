@@ -1,0 +1,277 @@
+---
+import { typoHtml } from '../../lib/schemas';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import GammeArt from '../../components/GammeArt.astro';
+import DocumentList from '../../components/DocumentList.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+
+export async function getStaticPaths() {
+  const gammes = (await getCollection('gammes')).sort((a, b) => a.data.order - b.data.order);
+  return gammes.map((gamme, i) => ({
+    params: { slug: gamme.id },
+    props: {
+      gamme,
+      index: i,
+      prev: gammes[(i - 1 + gammes.length) % gammes.length],
+      next: gammes[(i + 1) % gammes.length],
+    },
+  }));
+}
+
+interface Props {
+  gamme: CollectionEntry<'gammes'>;
+  index: number;
+  prev: CollectionEntry<'gammes'>;
+  next: CollectionEntry<'gammes'>;
+}
+
+const { gamme, index, prev, next } = Astro.props;
+const { data } = gamme;
+const { Content } = await render(gamme);
+const html = gamme.rendered?.html ? typoHtml(gamme.rendered.html) : null;
+const documents = (await getCollection('documents', (d) => d.data.gamme === gamme.id)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const breadcrumbs = [
+  { name: 'Gammes', url: '/gammes/' },
+  { name: data.short_title ?? data.title, url: `/gammes/${gamme.id}/` },
+];
+const quoteUrl = `/contact/?sujet=${encodeURIComponent('Demande de devis')}&gamme=${encodeURIComponent(data.short_title ?? data.title)}`;
+---
+
+<Base
+  title={data.title}
+  seoTitle={data.seo.title}
+  description={data.seo.description ?? data.summary}
+  image={data.seo.image ?? data.image}
+  noindex={data.seo.noindex}
+  breadcrumbs={breadcrumbs}
+  headerOverlay
+>
+  <PageHeader eyebrow={`Gamme ${String(index + 1).padStart(2, '0')}`} title={data.title} intro={data.summary} breadcrumbs={breadcrumbs}>
+    {
+      data.brands.length > 0 && (
+        <ul class="brands" aria-label="Marques distribuées">
+          {data.brands.map((b) => (
+            <li class="chip mono">{b}</li>
+          ))}
+        </ul>
+      )
+    }
+  </PageHeader>
+
+  <section class="section detail">
+    <div class="container detail__grid">
+      <aside class="detail__aside">
+        <div class="detail__art" data-reveal data-tilt>
+          {data.image ? <img src={data.image} alt={data.image_alt ?? ''} width="800" height="600" /> : <GammeArt name={data.illustration} />}
+        </div>
+        {
+          data.applications.length > 0 && (
+            <div class="detail__apps" data-reveal style="--i:1">
+              <h2 class="mono detail__label">Applications</h2>
+              <ul>
+                {data.applications.map((a) => (
+                  <li class="chip">{a}</li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+        <a href={quoteUrl} class="btn btn--accent detail__cta" data-magnetic data-reveal style="--i:2">
+          Demander un devis <Icon name="arrow-right" size={18} />
+        </a>
+      </aside>
+
+      <div class="detail__main">
+        {
+          data.features.length > 0 && (
+            <ul class="features">
+              {data.features.map((f, i) => (
+                <li class="feature" data-reveal style={`--i:${i % 2}`}>
+                  <span class="feature__num mono">{String(i + 1).padStart(2, '0')}</span>
+                  <h2 class="feature__title">{f.title}</h2>
+                  <p>{f.text}</p>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
+        <div class="prose detail__prose" data-reveal>
+          {html ? <Fragment set:html={html} /> : <Content />}
+        </div>
+
+        {
+          documents.length > 0 && (
+            <div class="detail__docs" data-reveal>
+              <h2 class="h3">Documentation associée</h2>
+              <DocumentList documents={documents} compact />
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <nav class="pager container" aria-label="Autres gammes">
+    <a href={`/gammes/${prev.id}/`} class="pager__link">
+      <span class="mono"><Icon name="arrow-left" size={16} /> Gamme précédente</span>
+      <strong>{prev.data.short_title ?? prev.data.title}</strong>
+    </a>
+    <a href={`/gammes/${next.id}/`} class="pager__link pager__link--next">
+      <span class="mono">Gamme suivante <Icon name="arrow-right" size={16} /></span>
+      <strong>{next.data.short_title ?? next.data.title}</strong>
+    </a>
+  </nav>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .brands {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin-top: 2rem;
+  }
+  .detail {
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
+  .detail__grid {
+    display: grid;
+    gap: 3rem;
+  }
+  .detail__aside {
+    display: grid;
+    gap: 1.5rem;
+    align-content: start;
+    justify-items: start;
+  }
+  .detail__art {
+    width: 100%;
+    display: grid;
+    place-items: center;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    background:
+      radial-gradient(90% 80% at 30% 20%, var(--surface), transparent 70%),
+      var(--paper-2);
+    transition: transform 0.6s var(--ease);
+  }
+  .detail__art img {
+    border-radius: 1rem;
+    width: 100%;
+  }
+  .detail__label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .detail__apps ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+  }
+  .features {
+    list-style: none;
+    display: grid;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .feature {
+    padding: 1.5rem;
+    background: var(--paper);
+  }
+  .feature__num {
+    font-size: 0.72rem;
+    color: var(--accent-strong);
+  }
+  .feature__title {
+    margin-top: 0.75rem;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+  }
+  .feature p {
+    margin-top: 0.4rem;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+  .detail__prose {
+    margin-top: 3rem;
+    font-size: 1.08rem;
+  }
+  .detail__docs {
+    margin-top: 3.5rem;
+    display: grid;
+    gap: 1.25rem;
+  }
+  .pager {
+    display: grid;
+    gap: 1rem;
+    padding-bottom: var(--section);
+  }
+  .pager__link {
+    display: grid;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition:
+      border-color 0.3s var(--ease),
+      background-color 0.3s var(--ease);
+  }
+  .pager__link:hover {
+    border-color: var(--accent);
+    background: var(--surface);
+  }
+  .pager__link span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .pager__link strong {
+    font-size: 1.3rem;
+    font-weight: 550;
+    letter-spacing: -0.02em;
+  }
+  .pager__link--next {
+    text-align: right;
+    justify-items: end;
+  }
+  @media (min-width: 700px) {
+    .features {
+      grid-template-columns: 1fr 1fr;
+    }
+    .pager {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1024px) {
+    .detail__grid {
+      grid-template-columns: 5fr 7fr;
+      gap: 5rem;
+    }
+    .detail__aside {
+      position: sticky;
+      top: calc(var(--header-h) + 1.5rem);
+    }
+  }
+</style>

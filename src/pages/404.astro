@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+import GammeArt from '../components/GammeArt.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Base title="Page introuvable" description="Cette page n'existe pas ou a été déplacée." noindex headerOverlay>
+  <section class="nf">
+    <div class="container nf__inner">
+      <div>
+        <p class="eyebrow">Erreur 404</p>
+        <h1 class="display nf__title">Connexion interrompue.</h1>
+        <p class="lead">La page que vous cherchez n'existe pas ou a été déplacée lors de la refonte du site.</p>
+        <div class="nf__actions">
+          <a href="/" class="btn" data-magnetic>Retour à l'accueil <Icon name="arrow-right" size={18} /></a>
+          <a href="/gammes/" class="btn btn--ghost">Voir nos gammes</a>
+        </div>
+      </div>
+      <div class="nf__art" aria-hidden="true">
+        <GammeArt name="gaine" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    min-height: 90dvh;
+    display: flex;
+    align-items: center;
+    padding-top: calc(var(--header-h) + 2rem);
+    padding-bottom: 4rem;
+  }
+  .nf__inner {
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+  }
+  .nf__title {
+    margin-block: 1.25rem 1.5rem;
+  }
+  .nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+  .nf__art {
+    max-width: 30rem;
+    animation: flicker 3.5s steps(1) infinite;
+  }
+  @keyframes flicker {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    47% {
+      opacity: 0.4;
+    }
+    49% {
+      opacity: 1;
+    }
+    51% {
+      opacity: 0.55;
+    }
+  }
+  @media (min-width: 960px) {
+    .nf__inner {
+      grid-template-columns: 1.2fr 1fr;
+    }
+  }
+</style>

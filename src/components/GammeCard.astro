@@ -1,0 +1,189 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import GammeArt from './GammeArt.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  gamme: CollectionEntry<'gammes'>;
+  index: number;
+  size?: 'lg' | 'wide' | 'md';
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { gamme, index, size = 'md', headingLevel = 'h3' } = Astro.props;
+const { data } = gamme;
+const Heading = headingLevel;
+---
+
+<article class:list={['gcard', `gcard--${size}`]} data-spotlight data-reveal style={`--i:${index % 4}`}>
+  <a href={`/gammes/${gamme.id}/`} class="gcard__link">
+    <div class="gcard__top">
+      <span class="gcard__num mono">{String(index + 1).padStart(2, '0')}</span>
+      {data.brands.length > 0 && <span class="gcard__brand mono">{data.brands[0]}</span>}
+    </div>
+    <div class="gcard__art">
+      {
+        data.image ? (
+          <img src={data.image} alt={data.image_alt ?? ''} loading="lazy" decoding="async" width="640" height="480" />
+        ) : (
+          <GammeArt name={data.illustration} />
+        )
+      }
+    </div>
+    <div class="gcard__body">
+      <Heading class="gcard__title">{data.short_title ?? data.title}</Heading>
+      <p class="gcard__summary">{data.summary}</p>
+    </div>
+    <span class="gcard__arrow" aria-hidden="true"><Icon name="arrow-up-right" size={20} /></span>
+  </a>
+</article>
+
+<style>
+  .gcard {
+    --mx: 50%;
+    --my: 50%;
+    position: relative;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    isolation: isolate;
+    transition:
+      border-color 0.4s var(--ease),
+      box-shadow 0.5s var(--ease),
+      transform 0.6s var(--ease);
+  }
+  .gcard::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(380px circle at var(--mx) var(--my), var(--accent), transparent 45%);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s var(--ease);
+  }
+  .gcard:hover::before {
+    opacity: 1;
+  }
+  .gcard:hover {
+    box-shadow: var(--shadow);
+  }
+  .gcard__link {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    height: 100%;
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+    text-decoration: none;
+    color: inherit;
+    border-radius: inherit;
+  }
+  .gcard__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .gcard__brand {
+    color: var(--accent-strong);
+  }
+  .gcard__art {
+    display: grid;
+    place-items: center;
+    padding: 1.5rem 0.5rem;
+    min-height: 10rem;
+  }
+  .gcard__art :global(svg),
+  .gcard__art img {
+    width: 100%;
+    max-width: 22rem;
+    transition: transform 0.8s var(--ease);
+  }
+  .gcard__art img {
+    border-radius: 1rem;
+    object-fit: cover;
+    aspect-ratio: 4 / 3;
+  }
+  .gcard:hover .gcard__art :global(svg),
+  .gcard:hover .gcard__art img {
+    transform: translateY(-4px) scale(1.03);
+  }
+  .gcard__body {
+    padding-right: 3.25rem;
+  }
+  .gcard__title {
+    font-size: 1.3rem;
+    letter-spacing: -0.025em;
+  }
+  .gcard__summary {
+    margin-top: 0.6rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--muted);
+    max-width: 48ch;
+  }
+  .gcard__arrow {
+    position: absolute;
+    right: clamp(1.25rem, 2.5vw, 2rem);
+    bottom: clamp(1.25rem, 2.5vw, 2rem);
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    transition:
+      background-color 0.4s var(--ease),
+      color 0.4s var(--ease),
+      border-color 0.4s var(--ease),
+      transform 0.5s var(--ease);
+  }
+  .gcard:hover .gcard__arrow {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    transform: rotate(45deg);
+  }
+
+  .gcard--lg .gcard__art :global(svg) {
+    max-width: 30rem;
+  }
+  .gcard--lg .gcard__title {
+    font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.1rem);
+  }
+  .gcard--lg .gcard__summary {
+    font-size: 1.02rem;
+  }
+  .gcard--lg {
+    background:
+      radial-gradient(120% 90% at 100% 0%, var(--accent-soft), transparent 55%),
+      var(--surface);
+  }
+  @media (min-width: 900px) {
+    .gcard--wide .gcard__link {
+      grid-template-columns: 1fr 1.1fr;
+      grid-template-rows: auto 1fr;
+      column-gap: 2rem;
+    }
+    .gcard--wide .gcard__top {
+      grid-column: 1 / -1;
+    }
+    .gcard--wide .gcard__art {
+      grid-column: 2;
+      grid-row: 2;
+    }
+    .gcard--wide .gcard__body {
+      grid-column: 1;
+      grid-row: 2;
+      align-self: end;
+    }
+  }
+</style>

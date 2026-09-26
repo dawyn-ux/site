@@ -1,0 +1,62 @@
+{
+  "eyebrow": "Services",
+  "title": "Plus qu'un catalogue : un accompagnement technique.",
+  "intro": "Choisir le bon contact, régler un outil de sertissage, valider la qualité d'une connexion : nous vous accompagnons à chaque étape, de l'étude à la production.",
+  "services": [
+    {
+      "title": "Analyse de coupe et de sertissage",
+      "text": "La qualité d'une connexion sertie se vérifie. Nous vous aidons à contrôler vos sertissages pour garantir une liaison fiable, étanche aux gaz et durable.",
+      "points": [
+        "Contrôle de la hauteur et de la forme de sertissage",
+        "Analyse de coupe transversale du sertissage",
+        "Recommandations de réglage des outils"
+      ],
+      "icon": "microscope"
+    },
+    {
+      "title": "Outillage et solutions de sertissage",
+      "text": "Des pinces manuelles aux applicateurs pour presses, nous vous orientons vers l'outillage adapté à vos volumes et à vos contacts.",
+      "points": [
+        "Pinces à sertir pour petites séries et maintenance",
+        "Applicateurs et presses pour la production",
+        "Solutions de sertissage STOCKO CONTACT"
+      ],
+      "icon": "tool"
+    },
+    {
+      "title": "Conseil et choix des composants",
+      "text": "Section de conducteur, environnement thermique, contraintes mécaniques : nous analysons votre besoin pour vous proposer les références adaptées.",
+      "points": [
+        "Sélection de cosses, contacts et connecteurs",
+        "Choix des protections mécaniques et électriques",
+        "Documentation technique des fabricants"
+      ],
+      "icon": "compass"
+    },
+    {
+      "title": "Approvisionnement",
+      "text": "Un interlocuteur unique à Saint-Priest pour regrouper vos achats de composants de connexion et simplifier vos approvisionnements.",
+      "points": [
+        "Suivi personnalisé de vos commandes",
+        "Regroupement de plusieurs familles de produits",
+        "Réponse rapide à vos demandes de prix"
+      ],
+      "icon": "box"
+    }
+  ],
+  "process": {
+    "title": "Comment nous travaillons",
+    "steps": [
+      { "title": "Votre besoin", "text": "Vous nous décrivez votre application, vos contraintes et vos volumes." },
+      { "title": "Notre sélection", "text": "Nous identifions les composants et l'outillage adaptés, documentation à l'appui." },
+      { "title": "Validation", "text": "Échantillons, contrôle des sertissages : la solution est validée avant la série." },
+      { "title": "Production", "text": "Nous assurons l'approvisionnement et restons disponibles pour vos évolutions." }
+    ]
+  },
+  "seo": {
+    "title": "Services : analyse de sertissage, outillage et conseil",
+    "description": "Analyse de coupe et de sertissage, outillage de sertissage, conseil au choix des composants et approvisionnement : l'accompagnement technique Connect Systèmes.",
+    "image": "",
+    "noindex": false
+  }
+}

@@ -1,0 +1,140 @@
+---
+import type { Breadcrumb } from './Seo.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  intro?: string;
+  breadcrumbs?: Breadcrumb[];
+}
+const { eyebrow, title, intro, breadcrumbs = [] } = Astro.props;
+---
+
+<section class="page-header">
+  <div class="page-header__grid" aria-hidden="true"></div>
+  <div class="container page-header__inner">
+    {
+      breadcrumbs.length > 0 && (
+        <nav class="crumbs mono" aria-label="Fil d'Ariane">
+          <ol>
+            <li>
+              <a href="/">Accueil</a>
+            </li>
+            {breadcrumbs.map((b, i) => (
+              <li>
+                {i === breadcrumbs.length - 1 ? (
+                  <span aria-current="page">{b.name}</span>
+                ) : (
+                  <a href={b.url}>{b.name}</a>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+    <p class="eyebrow page-header__eyebrow">{eyebrow}</p>
+    <h1 class="display page-header__title">{title}</h1>
+    {intro && <p class="lead page-header__intro">{intro}</p>}
+    <slot />
+  </div>
+  <svg class="page-header__wire" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M-10 90 C 280 90, 420 30, 720 30 S 1160 80, 1450 50" />
+    <path class="pulse" d="M-10 90 C 280 90, 420 30, 720 30 S 1160 80, 1450 50" />
+  </svg>
+</section>
+
+<style>
+  .page-header {
+    position: relative;
+    padding-top: calc(var(--header-h) + clamp(2.5rem, 7vw, 5.5rem));
+    padding-bottom: clamp(4rem, 8vw, 6.5rem);
+    overflow: hidden;
+  }
+  .page-header__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--ink), transparent 94%) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--ink), transparent 94%) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 60% 80% at 85% 20%, #000 10%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 60% 80% at 85% 20%, #000 10%, transparent 70%);
+    pointer-events: none;
+  }
+  .page-header__inner {
+    position: relative;
+  }
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 2.25rem;
+  }
+  .crumbs li + li::before {
+    content: '/';
+    margin-right: 0.4rem;
+    opacity: 0.5;
+  }
+  .crumbs a {
+    text-decoration: none;
+  }
+  .crumbs a:hover {
+    color: var(--text);
+  }
+  .crumbs [aria-current] {
+    color: var(--text);
+  }
+  .page-header__eyebrow {
+    animation: ph-in 0.9s var(--ease) both;
+  }
+  .page-header__title {
+    margin-top: 1.25rem;
+    max-width: 18ch;
+    font-size: clamp(2.3rem, 1.3rem + 3.8vw, 4.6rem);
+    animation: ph-in 1s var(--ease) 0.08s both;
+  }
+  .page-header__intro {
+    margin-top: 1.5rem;
+    animation: ph-in 1s var(--ease) 0.18s both;
+  }
+  .page-header__wire {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 5rem;
+    pointer-events: none;
+  }
+  .page-header__wire path {
+    fill: none;
+    stroke: var(--line-strong);
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+  }
+  .page-header__wire .pulse {
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    stroke-dasharray: 60 1600;
+    animation: ph-pulse 6s linear infinite;
+  }
+  @keyframes ph-pulse {
+    from {
+      stroke-dashoffset: 1660;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes ph-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+</style>

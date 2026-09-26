@@ -1,0 +1,565 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Icon from '../components/Icon.astro';
+import { pages, settings, phoneHref, mapsUrl, osmUrl } from '../lib/content';
+
+const page = pages.contact;
+const breadcrumbs = [{ name: 'Contact', url: '/contact/' }];
+
+const contactLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: page.title,
+  url: new URL('/contact/', Astro.site).href,
+  about: { '@id': new URL('/#organisation', Astro.site).href },
+};
+---
+
+<Base
+  title={page.title}
+  seoTitle={page.seo.title}
+  description={page.seo.description}
+  image={page.seo.image}
+  noindex={page.seo.noindex}
+  breadcrumbs={breadcrumbs}
+  jsonLd={[contactLd]}
+  headerOverlay
+>
+  <PageHeader eyebrow={page.eyebrow} title={page.title} intro={page.intro} breadcrumbs={breadcrumbs} />
+
+  <section class="section contact">
+    <div class="container contact__grid">
+      <aside class="contact__info" data-reveal>
+        <div class="info-card">
+          <p class="info-card__label mono">Coordonnées</p>
+          <ul class="info-card__list">
+            <li>
+              <Icon name="phone" size={20} />
+              <div>
+                <span class="mono">Téléphone</span>
+                <a href={phoneHref(settings.contact.phone)}>{settings.contact.phone}</a>
+              </div>
+            </li>
+            {
+              settings.contact.fax && (
+                <li>
+                  <Icon name="printer" size={20} />
+                  <div>
+                    <span class="mono">Fax</span>
+                    <p>{settings.contact.fax}</p>
+                  </div>
+                </li>
+              )
+            }
+            <li>
+              <Icon name="envelope" size={20} />
+              <div>
+                <span class="mono">E-mail</span>
+                <a href={`mailto:${settings.contact.email}`}>{settings.contact.email}</a>
+              </div>
+            </li>
+            <li>
+              <Icon name="map-pin" size={20} />
+              <div>
+                <span class="mono">Adresse</span>
+                <address>
+                  {settings.legal_name}<br />
+                  {settings.contact.street}<br />
+                  {settings.contact.postal_code} {settings.contact.city}
+                </address>
+              </div>
+            </li>
+            {
+              settings.contact.hours && (
+                <li>
+                  <Icon name="clock" size={20} />
+                  <div>
+                    <span class="mono">Horaires</span>
+                    <p>{settings.contact.hours}</p>
+                  </div>
+                </li>
+              )
+            }
+          </ul>
+        </div>
+
+        <div class="map-card">
+          <svg class="map-card__art" viewBox="0 0 400 220" aria-hidden="true">
+            <g class="roads">
+              <path d="M-10 160 C 80 150, 140 120, 220 124 S 360 90, 410 70" />
+              <path d="M60 -10 C 90 60, 110 120, 150 230" />
+              <path d="M250 -10 C 240 70, 280 150, 330 230" />
+              <path class="minor" d="M-10 60 C 100 70, 200 40, 410 30" />
+              <path class="minor" d="M-10 205 C 120 190, 260 200, 410 180" />
+              <path class="minor" d="M180 -10 C 190 60, 170 130, 200 230" />
+            </g>
+            <g class="pin" transform="translate(222 118)">
+              <circle r="22" class="pin__halo" />
+              <circle r="7" class="pin__dot" />
+            </g>
+          </svg>
+          <div class="map-card__body">
+            <p class="mono">{settings.contact.city} — Lyon Est</p>
+            <div class="map-card__links">
+              <a href={mapsUrl()} target="_blank" rel="noopener" class="link-arrow">Google Maps <Icon name="arrow-up-right" size={16} /></a>
+              <a href={osmUrl()} target="_blank" rel="noopener" class="link-arrow">OpenStreetMap <Icon name="arrow-up-right" size={16} /></a>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="contact__form-wrap" data-reveal style="--i:1">
+        <h2 class="h3">{page.form_title}</h2>
+        <p class="contact__form-text">{page.form_text}</p>
+
+        <form class="form" method="post" action="/api/contact" novalidate data-contact-form data-email={settings.contact.email}>
+          <div class="form__row">
+            <div class="field">
+              <label for="name">Nom et prénom <span aria-hidden="true">*</span></label>
+              <input id="name" name="name" type="text" autocomplete="name" required maxlength="120" />
+              <p class="field__error" id="name-error" aria-live="polite"></p>
+            </div>
+            <div class="field">
+              <label for="company">Société</label>
+              <input id="company" name="company" type="text" autocomplete="organization" maxlength="160" />
+            </div>
+          </div>
+          <div class="form__row">
+            <div class="field">
+              <label for="email">E-mail <span aria-hidden="true">*</span></label>
+              <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" />
+              <p class="field__error" id="email-error" aria-live="polite"></p>
+            </div>
+            <div class="field">
+              <label for="phone">Téléphone</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="subject">Objet <span aria-hidden="true">*</span></label>
+            <select id="subject" name="subject" required>
+              {page.subjects.map((s) => <option value={s}>{s}</option>)}
+            </select>
+          </div>
+          <div class="field">
+            <label for="message">Message <span aria-hidden="true">*</span></label>
+            <textarea id="message" name="message" rows="6" required maxlength="5000" aria-describedby="message-help"></textarea>
+            <p class="field__help" id="message-help">Références, quantités, délais, application…</p>
+            <p class="field__error" id="message-error" aria-live="polite"></p>
+          </div>
+          <div class="field field--hp" aria-hidden="true">
+            <label for="website">Ne pas remplir</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="field field--check">
+            <input id="consent" name="consent" type="checkbox" required />
+            <label for="consent">
+              J'accepte que mes données soient utilisées pour traiter ma demande, conformément à la{' '}
+              <a href="/confidentialite/">politique de confidentialité</a>. <span aria-hidden="true">*</span>
+            </label>
+            <p class="field__error" id="consent-error" aria-live="polite"></p>
+          </div>
+
+          <div class="form__footer">
+            <button type="submit" class="btn btn--accent form__submit" data-magnetic>
+              <span class="form__submit-label">Envoyer le message</span>
+              <Icon name="arrow-right" size={18} />
+            </button>
+            <p class="form__legal">* Champs obligatoires</p>
+          </div>
+
+          <div class="form__status" role="status" aria-live="polite" hidden data-status>
+            <Icon name="check" size={22} />
+            <p data-status-text>{page.success_message}</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+
+  if (form) {
+    // Pré-remplissage depuis les liens « Demander un devis / un document »
+    const params = new URLSearchParams(window.location.search);
+    const subject = params.get('sujet');
+    const select = form.querySelector<HTMLSelectElement>('#subject')!;
+    if (subject && [...select.options].some((o) => o.value === subject)) select.value = subject;
+    const context = [
+      params.get('gamme') && `Gamme : ${params.get('gamme')}`,
+      params.get('document') && `Document : ${params.get('document')}`,
+    ].filter(Boolean);
+    if (context.length) form.querySelector<HTMLTextAreaElement>('#message')!.value = `${context.join('\n')}\n\n`;
+
+    const setError = (name: string, message: string) => {
+      const input = form.querySelector<HTMLInputElement>(`[name="${name}"]`);
+      const out = form.querySelector<HTMLElement>(`#${name}-error`);
+      if (input) {
+        input.setAttribute('aria-invalid', message ? 'true' : 'false');
+        if (message) input.setAttribute('aria-describedby', `${name}-error`);
+      }
+      if (out) out.textContent = message;
+    };
+
+    const validate = () => {
+      const data = new FormData(form);
+      const errors: Record<string, string> = {};
+      if (!String(data.get('name') ?? '').trim()) errors.name = 'Merci d’indiquer votre nom.';
+      const email = String(data.get('email') ?? '').trim();
+      if (!email) errors.email = 'Merci d’indiquer votre e-mail.';
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = 'Cette adresse e-mail semble invalide.';
+      if (String(data.get('message') ?? '').trim().length < 10) errors.message = 'Votre message est un peu court (10 caractères minimum).';
+      if (!data.get('consent')) errors.consent = 'Merci d’accepter le traitement de vos données.';
+      ['name', 'email', 'message', 'consent'].forEach((k) => setError(k, errors[k] ?? ''));
+      const first = Object.keys(errors)[0];
+      if (first) form.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
+      return !first;
+    };
+
+    const mailtoFallback = (data: FormData) => {
+      const to = form.dataset.email!;
+      const body = [
+        `Nom : ${data.get('name')}`,
+        ...(data.get('company') ? [`Société : ${data.get('company')}`] : []),
+        `E-mail : ${data.get('email')}`,
+        ...(data.get('phone') ? [`Téléphone : ${data.get('phone')}`] : []),
+        '',
+        String(data.get('message') ?? ''),
+      ].join('\n');
+      window.location.href = `mailto:${to}?subject=${encodeURIComponent(String(data.get('subject')))}&body=${encodeURIComponent(body)}`;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validate()) return;
+      const data = new FormData(form);
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      const label = button.querySelector('.form__submit-label')!;
+      const status = form.querySelector<HTMLElement>('[data-status]')!;
+      const statusText = form.querySelector<HTMLElement>('[data-status-text]')!;
+      button.disabled = true;
+      form.classList.add('is-sending');
+      label.textContent = 'Envoi en cours…';
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: data,
+        });
+        if (res.ok) {
+          form.reset();
+          form.classList.add('is-sent');
+          status.hidden = false;
+          status.classList.remove('is-error');
+          status.focus?.();
+        } else if (res.status === 501) {
+          // Envoi d'e-mails non configuré : on ouvre la messagerie du visiteur
+          mailtoFallback(data);
+          status.hidden = false;
+          statusText.textContent = 'Votre logiciel de messagerie va s’ouvrir avec votre message pré-rempli.';
+        } else {
+          const json = await res.json().catch(() => ({}));
+          throw new Error(json.error || 'Erreur');
+        }
+      } catch (err) {
+        status.hidden = false;
+        status.classList.add('is-error');
+        statusText.textContent = `L’envoi a échoué. Vous pouvez nous écrire directement à ${form.dataset.email}.`;
+      } finally {
+        button.disabled = false;
+        form.classList.remove('is-sending');
+        label.textContent = 'Envoyer le message';
+      }
+    });
+  }
+</script>
+
+<style>
+  .contact {
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
+  .contact__grid {
+    display: grid;
+    gap: 2.5rem;
+    align-items: start;
+  }
+  .contact__info {
+    display: grid;
+    gap: 1rem;
+  }
+  .info-card,
+  .map-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .info-card {
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+  }
+  .info-card__label {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .info-card__list {
+    list-style: none;
+    display: grid;
+    margin-top: 1rem;
+  }
+  .info-card__list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .info-card__list li:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .info-card__list :global(.icon) {
+    color: var(--accent);
+    margin-top: 0.15rem;
+  }
+  .info-card__list span {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .info-card__list a,
+  .info-card__list p,
+  .info-card__list address {
+    font-style: normal;
+    font-size: 1.05rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .info-card__list a:hover {
+    color: var(--accent-strong);
+  }
+  .map-card__art {
+    width: 100%;
+    height: auto;
+    background: var(--paper-2);
+  }
+  .roads path {
+    fill: none;
+    stroke: var(--surface);
+    stroke-width: 10;
+    stroke-linecap: round;
+  }
+  .roads .minor {
+    stroke-width: 5;
+    opacity: 0.8;
+  }
+  .pin__halo {
+    fill: color-mix(in oklab, var(--accent), transparent 78%);
+    animation: halo 2.6s var(--ease) infinite;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  .pin__dot {
+    fill: var(--accent);
+    stroke: #fff;
+    stroke-width: 3;
+  }
+  @keyframes halo {
+    0% {
+      transform: scale(0.5);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.6);
+      opacity: 0;
+    }
+  }
+  .map-card__body {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem 1.5rem;
+  }
+  .map-card__body > p {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .map-card__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .contact__form-wrap {
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+  .contact__form-text {
+    margin-top: 0.5rem;
+    color: var(--muted);
+  }
+  .form {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 2rem;
+  }
+  .form__row {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .field {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .field label {
+    font-size: 0.9rem;
+    font-weight: 550;
+  }
+  .field label span {
+    color: var(--accent-strong);
+  }
+  .field input:not([type='checkbox']),
+  .field select,
+  .field textarea {
+    width: 100%;
+    min-height: 3.1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.85rem;
+    background: var(--paper);
+    transition:
+      border-color 0.25s var(--ease),
+      box-shadow 0.25s var(--ease),
+      background-color 0.25s var(--ease);
+  }
+  .field textarea {
+    resize: vertical;
+    min-height: 9rem;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: #fff;
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent), transparent 82%);
+  }
+  .field [aria-invalid='true'] {
+    border-color: #b3261e;
+  }
+  .field__help {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .field__error {
+    font-size: 0.82rem;
+    color: #b3261e;
+    min-height: 0;
+  }
+  .field__error:empty {
+    display: none;
+  }
+  .field--hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .field--check {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 0.5rem 0.75rem;
+  }
+  .field--check input {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-top: 0.2rem;
+    accent-color: var(--accent);
+  }
+  .field--check label {
+    font-weight: 400;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+  .field--check .field__error {
+    grid-column: 1 / -1;
+  }
+  .form__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  .form__legal {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .form__submit[disabled] {
+    opacity: 0.7;
+    cursor: progress;
+  }
+  .is-sending .form__submit::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.35) 50%, transparent 80%);
+    background-size: 200% 100%;
+    animation: shimmer 1.1s linear infinite;
+  }
+  @keyframes shimmer {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
+  }
+  .form__status {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 1rem 1.25rem;
+    border-radius: 0.9rem;
+    background: color-mix(in oklab, #2e7d4f, var(--paper) 88%);
+    color: #1f5a37;
+    animation: pop 0.6s var(--ease);
+  }
+  .form__status.is-error {
+    background: color-mix(in oklab, #b3261e, var(--paper) 90%);
+    color: #8c1d18;
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+    }
+  }
+  @media (min-width: 700px) {
+    .form__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1024px) {
+    .contact__grid {
+      grid-template-columns: 5fr 7fr;
+      gap: 3rem;
+    }
+    .contact__info {
+      position: sticky;
+      top: calc(var(--header-h) + 1.5rem);
+    }
+  }
+</style>

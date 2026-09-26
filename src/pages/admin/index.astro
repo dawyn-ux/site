@@ -1,0 +1,24 @@
+---
+// Interface d'administration (Decap CMS). Non indexée par les moteurs de recherche.
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Administration du site — Connect Systèmes</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
+  </head>
+  <body>
+    <script is:inline>window.CMS_MANUAL_INIT = true;</script>
+    <script is:inline src="/admin/vendor/decap-cms.js"></script>
+    <script is:inline>
+      // La connexion GitHub passe par le domaine en cours (domaine Vercel ou domaine définitif).
+      CMS.init({ config: { backend: { base_url: window.location.origin } } });
+      CMS.registerPreviewStyle('/admin/preview.css');
+    </script>
+  </body>
+</html>

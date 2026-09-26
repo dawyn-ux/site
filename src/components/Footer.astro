@@ -1,0 +1,191 @@
+---
+import { getCollection } from 'astro:content';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { settings, phoneHref, mapsUrl } from '../lib/content';
+
+const gammes = (await getCollection('gammes')).sort((a, b) => a.data.order - b.data.order);
+const year = new Date().getFullYear();
+const socials = (['linkedin', 'facebook', 'youtube'] as const).filter((k) => settings.social[k]);
+---
+
+<footer class="site-footer section--ink">
+  <div class="container">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <Logo tone="paper" />
+        <p class="site-footer__tagline">{settings.tagline}.</p>
+        <p class="site-footer__since mono">Depuis {settings.legal.founded} — {settings.contact.city}</p>
+      </div>
+
+      <div class="site-footer__cols">
+        <div>
+          <h2 class="site-footer__title mono">Gammes</h2>
+          <ul>
+            {
+              gammes.map((g) => (
+                <li>
+                  <a href={`/gammes/${g.id}/`}>{g.data.short_title ?? g.data.title}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+          <h2 class="site-footer__title mono">Entreprise</h2>
+          <ul>
+            <li><a href="/services/">Services</a></li>
+            <li><a href="/documentation/">Documentation</a></li>
+            <li><a href="/entreprise/">Qui sommes-nous</a></li>
+            <li><a href="/actualites/">Actualités</a></li>
+            <li><a href="/contact/">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="site-footer__title mono">Contact</h2>
+          <address>
+            <a href={mapsUrl()} target="_blank" rel="noopener">
+              {settings.legal_name}<br />
+              {settings.contact.street}<br />
+              {settings.contact.postal_code} {settings.contact.city}
+            </a>
+          </address>
+          <ul class="site-footer__contact">
+            <li>
+              <a href={phoneHref(settings.contact.phone)}><Icon name="phone" size={16} /> {settings.contact.phone}</a>
+            </li>
+            {
+              settings.contact.fax && (
+                <li>
+                  <span>
+                    <Icon name="printer" size={16} /> {settings.contact.fax}
+                  </span>
+                </li>
+              )
+            }
+            <li>
+              <a href={`mailto:${settings.contact.email}`}><Icon name="envelope" size={16} /> {settings.contact.email}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="site-footer__giant" aria-hidden="true">Connect Systèmes</p>
+
+    <div class="site-footer__bottom">
+      <p>© {year} {settings.legal_name}. Tous droits réservés.</p>
+      <ul>
+        <li><a href="/mentions-legales/">Mentions légales</a></li>
+        <li><a href="/confidentialite/">Confidentialité</a></li>
+        {
+          socials.map((s) => (
+            <li>
+              <a href={settings.social[s]} target="_blank" rel="noopener" aria-label={s}>
+                <Icon name={s} size={18} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: clamp(4rem, 8vw, 6rem) 2rem;
+    overflow: hidden;
+  }
+  .site-footer a {
+    text-decoration: none;
+    color: var(--on-ink-muted);
+    transition: color 0.3s var(--ease);
+  }
+  .site-footer a:hover {
+    color: var(--on-ink);
+  }
+  .site-footer__top {
+    display: grid;
+    gap: 3rem;
+  }
+  .site-footer__tagline {
+    margin-top: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 550;
+    letter-spacing: -0.03em;
+    max-width: 18ch;
+  }
+  .site-footer__since {
+    margin-top: 0.75rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--on-ink-muted);
+  }
+  .site-footer__cols {
+    display: grid;
+    gap: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  }
+  .site-footer__title {
+    margin-bottom: 1rem;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-on-ink);
+  }
+  .site-footer ul {
+    list-style: none;
+    display: grid;
+    gap: 0.55rem;
+    font-size: 0.95rem;
+  }
+  .site-footer address {
+    font-style: normal;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin-bottom: 1rem;
+  }
+  .site-footer__contact a,
+  .site-footer__contact span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--on-ink-muted);
+  }
+  .site-footer__giant {
+    margin: clamp(3rem, 7vw, 5rem) 0 1.5rem;
+    font-size: clamp(3rem, 12.2vw, 11.5rem);
+    font-weight: 650;
+    letter-spacing: -0.06em;
+    line-height: 0.8;
+    white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--ink-line);
+    user-select: none;
+  }
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--ink-line);
+    font-size: 0.85rem;
+    color: var(--on-ink-muted);
+  }
+  .site-footer__bottom ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 0.85rem;
+  }
+  @media (min-width: 960px) {
+    .site-footer__top {
+      grid-template-columns: 1fr 1.6fr;
+    }
+  }
+</style>

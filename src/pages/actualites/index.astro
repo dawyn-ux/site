@@ -1,0 +1,146 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Icon from '../../components/Icon.astro';
+import GammeArt from '../../components/GammeArt.astro';
+import { pages, formatDate } from '../../lib/content';
+
+const page = pages.actualites;
+const posts = (await getCollection('actualites', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const breadcrumbs = [{ name: 'Actualités', url: '/actualites/' }];
+---
+
+<Base
+  title={page.title}
+  seoTitle={page.seo.title}
+  description={page.seo.description}
+  image={page.seo.image}
+  noindex={page.seo.noindex}
+  breadcrumbs={breadcrumbs}
+  headerOverlay
+>
+  <PageHeader eyebrow={page.eyebrow} title={page.title} intro={page.intro} breadcrumbs={breadcrumbs} />
+
+  <section class="section posts">
+    <div class="container">
+      {
+        posts.length === 0 ? (
+          <div class="posts__empty">
+            <p class="h3">Aucune actualité pour le moment.</p>
+            <p>Revenez bientôt : nos nouveautés produits seront publiées ici.</p>
+          </div>
+        ) : (
+          <ul class="posts__list">
+            {posts.map((p, i) => (
+              <li data-reveal style={`--i:${i % 3}`}>
+                <a href={`/actualites/${p.id}/`} class="post" data-spotlight>
+                  <div class="post__media">
+                    {p.data.image ? (
+                      <img src={p.data.image} alt={p.data.image_alt ?? ''} loading="lazy" decoding="async" width="800" height="500" />
+                    ) : (
+                      <GammeArt name="connecteur" />
+                    )}
+                  </div>
+                  <div class="post__body">
+                    <time class="mono" datetime={p.data.date.toISOString()}>
+                      {formatDate(p.data.date)}
+                    </time>
+                    <h2 class="post__title">{p.data.title}</h2>
+                    <p class="post__summary">{p.data.summary}</p>
+                    <span class="link-arrow">
+                      Lire l'article <Icon name="arrow-up-right" size={16} />
+                    </span>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .posts {
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
+  .posts__list {
+    list-style: none;
+    display: grid;
+    gap: 1.25rem;
+  }
+  .post {
+    display: grid;
+    height: 100%;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    overflow: hidden;
+    text-decoration: none;
+    transition:
+      box-shadow 0.5s var(--ease),
+      transform 0.6s var(--ease);
+  }
+  .post:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-3px);
+  }
+  .post__media {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 10;
+    padding: 2rem;
+    background: var(--paper-2);
+    overflow: hidden;
+  }
+  .post__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .post__media:has(img) {
+    padding: 0;
+  }
+  .post__body {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+    padding: 1.5rem 1.75rem 1.75rem;
+  }
+  .post__body time {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .post__title {
+    font-size: 1.45rem;
+    letter-spacing: -0.025em;
+  }
+  .post__summary {
+    color: var(--muted);
+  }
+  .posts__empty {
+    display: grid;
+    gap: 0.5rem;
+    padding: 3rem;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-lg);
+    color: var(--muted);
+  }
+  @media (min-width: 760px) {
+    .posts__list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1100px) {
+    .posts__list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .posts__list > li:first-child {
+      grid-column: span 2;
+    }
+  }
+</style>
