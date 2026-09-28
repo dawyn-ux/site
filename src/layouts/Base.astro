@@ -5,6 +5,7 @@ import Seo, { type SeoProps } from '../components/Seo.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { settings } from '../lib/content';
+import { DEMO_MODE, DEMO_AUTHOR } from 'astro:env/client';
 
 interface Props extends SeoProps {
   headerOverlay?: boolean;
@@ -21,7 +22,7 @@ const themeCss = `:root{--accent:${settings.theme.accent};--accent-2:${settings.
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <script is:inline>document.documentElement.classList.add('js');</script>
-    <Seo {...seo} />
+    <Seo {...seo} noindex={seo.noindex || DEMO_MODE} />
     <link rel="preload" href={geistLatin} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
@@ -40,9 +41,54 @@ const themeCss = `:root{--accent:${settings.theme.accent};--accent-2:${settings.
       <slot />
     </main>
     <Footer />
+    {
+      DEMO_MODE && (
+        <p class="demo-banner" role="note">
+          <span class="demo-banner__long">Maquette de démonstration{DEMO_AUTHOR ? ` — proposition de ${DEMO_AUTHOR}` : ''}</span>
+          <span class="demo-banner__short">Maquette{DEMO_AUTHOR ? ` · ${DEMO_AUTHOR}` : ''}</span>
+        </p>
+      )
+    }
     <div class="grain" aria-hidden="true"></div>
     <script>
       import '../scripts/ui';
     </script>
   </body>
 </html>
+
+<style>
+  .demo-banner {
+    position: fixed;
+    left: 50%;
+    bottom: 1rem;
+    z-index: 70;
+    transform: translateX(-50%);
+    max-width: calc(100vw - 2rem);
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--ink), transparent 8%);
+    color: var(--on-ink);
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: var(--shadow);
+    pointer-events: none;
+  }
+  .demo-banner__short {
+    display: none;
+  }
+  @media (max-width: 560px) {
+    .demo-banner {
+      font-size: 0.72rem;
+      bottom: 0.75rem;
+    }
+    .demo-banner__long {
+      display: none;
+    }
+    .demo-banner__short {
+      display: inline;
+    }
+  }
+</style>

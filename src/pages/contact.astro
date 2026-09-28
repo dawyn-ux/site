@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import PageHeader from '../components/PageHeader.astro';
 import Icon from '../components/Icon.astro';
 import { pages, settings, phoneHref, mapsUrl, osmUrl } from '../lib/content';
+import { DEMO_MODE } from 'astro:env/client';
 
 const page = pages.contact;
 const breadcrumbs = [{ name: 'Contact', url: '/contact/' }];
@@ -113,7 +114,7 @@ const contactLd = {
         <h2 class="h3">{page.form_title}</h2>
         <p class="contact__form-text">{page.form_text}</p>
 
-        <form class="form" method="post" action="/api/contact" novalidate data-contact-form data-email={settings.contact.email}>
+        <form class="form" method="post" action="/api/contact" novalidate data-contact-form data-email={settings.contact.email} data-demo={DEMO_MODE ? 'true' : undefined}>
           <div class="form__row">
             <div class="field">
               <label for="name">Nom et prénom <span aria-hidden="true">*</span></label>
@@ -235,6 +236,14 @@ const contactLd = {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!validate()) return;
+      if (form.dataset.demo) {
+        const status = form.querySelector<HTMLElement>('[data-status]')!;
+        status.hidden = false;
+        status.classList.remove('is-error');
+        form.querySelector<HTMLElement>('[data-status-text]')!.textContent =
+          'Démonstration : le formulaire sera relié à votre messagerie lors de la mise en ligne. Aucun message n’a été envoyé.';
+        return;
+      }
       const data = new FormData(form);
       const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
       const label = button.querySelector('.form__submit-label')!;

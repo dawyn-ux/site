@@ -65,6 +65,44 @@ créer un compte, vérifier le domaine `connect-systemes.fr`, puis définir `RES
 (plusieurs adresses possibles, séparées par des virgules) et `CONTACT_FROM_EMAIL` (ex. `Site Connect Systèmes <site@connect-systemes.fr>`).
 **Sans ces variables**, le formulaire reste utilisable : il ouvre la messagerie du visiteur avec le message pré-rempli.
 
+## Maquette de démonstration sur un VPS (avant la vente)
+
+Le mode démo ajoute une bannière « Maquette », interdit l'indexation (balise `noindex` + `robots.txt`) et désactive
+l'envoi du formulaire. Le reste du site (pages, 3D, animations) fonctionne normalement.
+
+```bash
+# Sur le VPS (Node.js 22+) :
+git clone <dépôt> site && cd site && git checkout claude/funny-knuth-u7uym0
+npm ci
+DEMO_AUTHOR="Prénom Nom" npm run build:demo
+sudo mkdir -p /var/www/maquette && sudo cp -r .vercel/output/static/. /var/www/maquette/
+
+# Mot de passe d'accès (identifiant : client)
+sudo apt install -y apache2-utils
+sudo htpasswd -c /etc/nginx/.htpasswd-maquette client
+```
+
+Configuration nginx (`/etc/nginx/sites-available/maquette`, puis lien dans `sites-enabled` et `sudo nginx -s reload`) :
+
+```nginx
+server {
+    server_name maquette.votre-domaine.fr;
+    root /var/www/maquette;
+    index index.html;
+
+    auth_basic "Maquette privée";
+    auth_basic_user_file /etc/nginx/.htpasswd-maquette;
+    add_header X-Robots-Tag "noindex, nofollow" always;
+
+    location / {
+        try_files $uri $uri/ $uri/index.html =404;
+    }
+    error_page 404 /404.html;
+}
+```
+
+Activer le HTTPS : `sudo certbot --nginx -d maquette.votre-domaine.fr`.
+
 ## Guide d'édition (pour l'équipe Connect Systèmes)
 
 Se rendre sur `https://www.connect-systemes.fr/admin`, puis cliquer sur **Se connecter avec GitHub**.

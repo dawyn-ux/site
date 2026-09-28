@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "cms": "decap-server",
     "check": "astro check",
-    "import-docs": "node scripts/import-legacy-documents.mjs"
+    "import-docs": "node scripts/import-legacy-documents.mjs",
+    "build:demo": "DEMO_MODE=true node scripts/copy-decap.mjs && DEMO_MODE=true astro build"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

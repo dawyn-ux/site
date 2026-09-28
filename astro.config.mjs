@@ -46,6 +46,9 @@ export default defineConfig({
       RESEND_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
       CONTACT_TO_EMAIL: envField.string({ context: 'server', access: 'secret', optional: true }),
       CONTACT_FROM_EMAIL: envField.string({ context: 'server', access: 'secret', optional: true }),
+      // Mode démo (maquette sur un serveur de test) : bannière, pas d'indexation, formulaire inactif
+      DEMO_MODE: envField.boolean({ context: 'client', access: 'public', default: false }),
+      DEMO_AUTHOR: envField.string({ context: 'client', access: 'public', optional: true }),
     },
   },
   prefetch: {
